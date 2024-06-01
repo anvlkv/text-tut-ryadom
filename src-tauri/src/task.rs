@@ -1,0 +1,75 @@
+use std::fs;
+
+use serde::{Deserialize, Serialize};
+use ts_rs::TS;
+
+use crate::{
+    highlight::{read_highlights, HighlightRecord, HIGHLIGHT_ENDS},
+    input::{read_inputs, InputRecord, INPUT_ENDS},
+    output::{read_outputs, OutputRecord, OUTPUT_ENDS},
+};
+
+#[derive(Clone, Serialize, Deserialize, TS)]
+pub struct Task {
+    pub input: InputRecord,
+    pub output: Option<OutputRecord>,
+    pub highlights: Vec<HighlightRecord>,
+    pub origin: String,
+    pub postponed: Option<chrono::DateTime<chrono::Utc>>
+}
+
+#[tauri::command]
+pub fn read_file_tasks(path: &str) -> Result<Vec<Task>, String> {
+    let output_path = path.replace(INPUT_ENDS, OUTPUT_ENDS);
+    let highlights_path = path.replace(INPUT_ENDS, HIGHLIGHT_ENDS);
+
+    if !std::path::Path::new(output_path.as_str()).exists() {
+        fs::write(output_path.as_str(), "").map_err(|e| e.to_string())?;
+    }
+
+    if !std::path::Path::new(highlights_path.as_str()).exists() {
+        fs::write(highlights_path.as_str(), "").map_err(|e| e.to_string())?;
+    }
+
+    let file_inputs = read_inputs(path)?;
+    let file_outputs = read_outputs(output_path.as_str())?;
+    let file_highlights = read_highlights(highlights_path.as_str())?;
+    Ok(file_inputs
+        .into_iter()
+        .map(|input| {
+            let output = file_outputs.iter().find(|o| o.text_id == input.id).cloned();
+            let highlights = file_highlights
+                .iter()
+                .filter(|h| h.text_id == input.id)
+                .cloned()
+                .collect();
+            Task {
+                input,
+                output,
+                highlights,
+                origin: path.to_string(),
+                postponed: None
+            }
+        })
+        .collect())
+}
+
+#[tauri::command]
+pub fn read_dir_tasks(dir: &str) -> Result<Vec<Task>, String> {
+    let dir = fs::read_dir(dir).map_err(|e| e.to_string())?;
+
+    let mut tasks = vec![];
+
+    for entry in dir {
+        let entry = entry.map_err(|e| e.to_string())?;
+        if let Some(name) = entry.file_name().to_str() {
+            if name.ends_with(INPUT_ENDS) {
+                if let Some(path) = entry.path().to_str() {
+                    tasks.extend(read_file_tasks(path)?)
+                }
+            }
+        }
+    }
+
+    Ok(tasks)
+}
