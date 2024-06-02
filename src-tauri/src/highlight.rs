@@ -9,6 +9,7 @@ pub struct HighlightRecord {
     pub group_id: String,
     pub start: usize,
     pub end: usize,
+    pub color: String,
 }
 
 #[tauri::command]

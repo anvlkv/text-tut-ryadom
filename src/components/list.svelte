@@ -11,6 +11,7 @@
     $ctx.entries_window?.[0],
     $ctx.entries_window?.[1]
   );
+  
   $: heightBefore = ($ctx.entries_window?.[0] || 0) * taskHeight;
   $: heightAfter = Math.max(
     (($ctx.total_entries || 0) - ($ctx.entries_window?.[1] || 0)) * taskHeight,
