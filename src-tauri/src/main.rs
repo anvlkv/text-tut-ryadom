@@ -19,16 +19,20 @@ async fn close_splashscreen(window: Window) {
 fn main() {
     #[cfg(debug_assertions)]
     {
-        <task::Task as ts_rs::TS>::export_all_to("../src/types/").expect("write ts types");
+        <task::Task as ts_rs::TS>::export_all_to("../src/lib/types/").expect("write ts types");
     }
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             input::read_inputs,
             highlight::read_highlights,
+            highlight::write_highlights,
+            highlight::split_highlight_ranges,
             output::read_outputs,
+            output::write_output,
             task::read_dir_tasks,
             task::read_file_tasks,
+            task::write_task,
             close_splashscreen
         ])
         .run(tauri::generate_context!())

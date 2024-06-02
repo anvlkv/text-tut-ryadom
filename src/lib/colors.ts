@@ -1,15 +1,15 @@
 export const INFO_COLORS = [
   "#8286dd",
+  "#e2c78f",
   "#afb1eb",
-  "#b4d9b7",
   "#8dc593",
-  "#88bdc6",
   "#aed3db",
   "#fddada",
+  "#88bdc6",
   "#f0b3b3",
   "#b787d3",
   "#da8aa5",
   "#e48b8b",
+  "#b4d9b7",
   "#e49f8c",
-  "#e2c78f",
 ];

@@ -1,19 +1,49 @@
 <script lang="ts">
   import "../app.css";
   import { invoke } from "@tauri-apps/api/tauri";
-  import { readTextFile, BaseDirectory } from "@tauri-apps/api/fs";
+  import {
+    readTextFile,
+    writeTextFile,
+    BaseDirectory,
+    exists,
+    createDir
+  } from "@tauri-apps/api/fs";
   import { open } from "@tauri-apps/api/dialog";
   import { onMount, setContext } from "svelte";
-  import Header from "../components/header.svelte";
-  import List from "../components/list.svelte";
-  import type { AppData } from "../types/AppData";
-  import type { Task } from "../types/Task";
+  import Header from "$lib/header.svelte";
+  import TaskList from "$lib/taskList.svelte";
+  import type { AppData } from "$lib/types/AppData";
+  import type { Task } from "$lib/types/Task";
   import { goto } from "$app/navigation";
   import { writable } from "svelte/store";
 
   const data = setContext("appData", writable({} as AppData));
 
   export const WINDOW_SIZE = 100;
+  const APP_DATA_FILE = "config/app_data.json";
+
+  async function storeAppData() {
+    const { src_dir, current_entry } = $data;
+
+    try {
+      if (!await exists(APP_DATA_FILE, {dir: BaseDirectory.AppData})) {
+        await createDir('config', {dir: BaseDirectory.AppData, recursive: true});
+      }
+
+      await writeTextFile(
+        APP_DATA_FILE,
+        JSON.stringify({ src_dir, current_entry }),
+        { dir: BaseDirectory.AppData }
+      );
+  
+      console.info("app data stored");
+    }
+    catch (e) {
+      console.error("failed to store app data", e);
+    }
+  }
+
+  setContext("storeAppData", storeAppData);
 
   async function loadDir() {
     console.info("loading dir");
@@ -51,7 +81,7 @@
 
     try {
       const { src_dir, current_entry } = JSON.parse(
-        await readTextFile("app_data.json", { dir: BaseDirectory.AppData })
+        await readTextFile(APP_DATA_FILE, { dir: BaseDirectory.AppData })
       );
       $data.current_entry = current_entry;
       $data.src_dir = src_dir;
@@ -67,8 +97,8 @@
     const entry_id = $data.current_entry! || $data.entries![0].input.id;
     const entry_step = $data.entries!.find((e) => e.input.id === entry_id)
       ?.output
-      ? "2"
-      : "1";
+      ? "summarize"
+      : "highlight";
 
     await goto(`/${entry_id}/${entry_step}`, { replaceState: true });
 
@@ -79,7 +109,7 @@
 </script>
 
 <main
-  class="font-body select-none flex flex-col h-screen w-screen items-stretch justify-stretch"
+  class="font-body select-none h-screen w-screen overflow-hidden flex flex-col items-stretch justify-stretch"
 >
   {#if !$data.total_entries}
     <p class="max-w-prose mx-auto my-6">
@@ -92,11 +122,9 @@
       Выбрать
     </button>
   {:else}
-    <Header>
-      <slot name="header" />
-    </Header>
-    <div class="flex items-stretch justify-stretch">
-      <List />
+    <Header />
+    <div class="flex grow items-stretch justify-stretch w-full overflow-hidden">
+      <TaskList />
       <slot />
     </div>
   {/if}

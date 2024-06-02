@@ -7,7 +7,22 @@ pub const OUTPUT_ENDS: &str = ".output.csv";
 pub struct OutputRecord {
     pub text_id: String,
     pub text: String,
-    pub completed_ts: chrono::DateTime<chrono::Utc>
+    pub completed_ts: Option<chrono::DateTime<chrono::Utc>>
+}
+
+#[tauri::command]
+pub fn write_output(file: &str, output: OutputRecord) -> Result<(), String> {
+    let mut entries = read_outputs(file)?;
+
+    entries.retain(|e| e.text_id != output.text_id);
+
+    let mut writer = csv::Writer::from_path(file).map_err(|e| e.to_string())?;
+
+    writer.serialize(output).map_err(|e| e.to_string())?;
+
+    writer.flush().map_err(|e| e.to_string())?;
+
+    Ok(())
 }
 
 #[tauri::command]

@@ -21,11 +21,12 @@
         "save": true
       },
       "fs": {
-        "scope": ["$APPDATA/*"],
+        "scope": ["$APPDATA/**/*"],
         "readFile": true,
         "readDir": true,
         "writeFile": true,
-        "exists": true
+        "exists": true,
+        "createDir": true
       }
     },
     "windows": [

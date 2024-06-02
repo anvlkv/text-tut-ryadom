@@ -1,12 +1,14 @@
 <script lang="ts">
-  import type { Task } from "../types/Task";
+  import type { Task } from "./types/Task";
 
-
-  export let task: Task
-  export let isCurrent: boolean
+  export let task: Task;
+  export let isCurrent: boolean;
 </script>
 
-<a href="/{task.input.id}/{task.output ? '2' : '1'}" class="h-full w-full p-2 flex flex-col border-b border-solid border-gray-500">
+<a
+  href="/{task.input.id}/{task.output ? 'summarize' : 'highlight'}"
+  class="h-full w-full p-2 flex flex-col border-b border-solid border-gray-500"
+>
   <h5>#{task.input.id}</h5>
 
   {#if task.output}

@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
 use crate::{
-    highlight::{read_highlights, HighlightRecord, HIGHLIGHT_ENDS},
+    highlight::{read_highlights, write_highlights, HighlightRecord, HIGHLIGHT_ENDS},
     input::{read_inputs, InputRecord, INPUT_ENDS},
-    output::{read_outputs, OutputRecord, OUTPUT_ENDS},
+    output::{read_outputs, write_output, OutputRecord, OUTPUT_ENDS},
 };
 
 #[derive(Clone, Serialize, Deserialize, TS)]
@@ -52,6 +52,20 @@ pub fn read_file_tasks(path: &str) -> Result<Vec<Task>, String> {
             }
         })
         .collect())
+}
+
+#[tauri::command]
+pub fn write_task(task: Task) -> Result<(), String> {
+    let output_path = task.origin.replace(INPUT_ENDS, OUTPUT_ENDS);
+    let highlights_path = task.origin.replace(INPUT_ENDS, HIGHLIGHT_ENDS);
+
+    write_highlights(&highlights_path, task.highlights)?;
+
+    if let Some(output) = task.output {
+        write_output(&output_path, output)?;
+    }
+
+    Ok(())
 }
 
 #[tauri::command]

@@ -1,0 +1,65 @@
+<script lang="ts">
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
+  import type { AppData } from "$lib/types/AppData";
+  import HighlightsPrioritized from "$lib/highlightsPrioritized.svelte";
+  import type { ChangeEventHandler } from "svelte/elements";
+
+  const ctx: Writable<AppData> = getContext("appData");
+
+  $: task = $ctx.entries!.find((e) => e.input.id === $ctx.current_entry);
+  $: taskIndex = $ctx.entries!.findIndex(
+    (e) => e.input.id === $ctx.current_entry
+  );
+
+  function updateOutput(value: string) {
+    ctx.update((d) => {
+      d.entries![taskIndex].output = {
+        ...(d.entries![taskIndex].output || {
+          text_id: task!.input.id,
+          completed_ts: null,
+        }),
+        text: value,
+      };
+
+      return d;
+    });
+  }
+
+  let timer: number;
+
+  const debounce = (value: string) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      updateOutput(value);
+    }, 750);
+  };
+
+  const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    const value = e.currentTarget.value;
+    updateOutput(value);
+  };
+  const handleKeyUp: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    const value = e.currentTarget.value;
+    debounce(value);
+  };
+</script>
+
+<div class="contents">
+  {#if task}
+    <h2 class="w-full text-center mb-8 text-gray-500 font-semibold text-lg">
+      Составь краткое описание этого текста:
+    </h2>
+    <div class="max-w-prose mx-auto flex flex-col my-auto overflow-y-auto">
+      <HighlightsPrioritized {task} />
+      <textarea
+        class="mt-4 p-4 rounded border border-gray-500"
+        rows="8"
+        placeholder="Введи описание"
+        value={task.output?.text || ""}
+        on:change={handleChange}
+        on:keyup={handleKeyUp}
+      ></textarea>
+    </div>
+  {/if}
+</div>

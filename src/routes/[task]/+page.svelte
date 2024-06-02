@@ -1,11 +1,11 @@
 <script lang="ts">
   import { redirect } from "@sveltejs/kit";
   import { onMount } from "svelte";
-  import type { Task } from "../../types/Task";
+  import type { Task } from "$lib/types/Task";
 
   export let task: Task;
 
   onMount(() => {
-    throw redirect(307, `/${task.input.id}/1`)
+    throw redirect(307, `/${task.input.id}/highlight`)
   })
 </script>
