@@ -26,7 +26,7 @@
     });
   }
 
-  let timer: number;
+  let timer: any;
 
   const debounce = (value: string) => {
     clearTimeout(timer);
@@ -50,10 +50,10 @@
     <h2 class="w-full text-center mb-8 text-gray-500 font-semibold text-lg">
       Составь краткое описание этого текста:
     </h2>
-    <div class="max-w-prose mx-auto flex flex-col my-auto overflow-y-auto">
+    <div class="max-w-prose mx-auto flex flex-col my-auto overflow-y-auto overflow-x-visible">
       <HighlightsPrioritized {task} />
       <textarea
-        class="mt-4 p-4 rounded border border-gray-500"
+        class="my-4 p-4 rounded border-2 outline-none border-gray-300 focus:border-blue-500"
         rows="8"
         placeholder="Введи описание"
         value={task.output?.text || ""}

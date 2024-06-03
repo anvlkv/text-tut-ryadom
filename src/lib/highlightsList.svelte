@@ -1,12 +1,20 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext } from "svelte";
   import type { Task } from "./types/Task";
+  import { highlightColor } from "./color";
+  import type { Writable } from "svelte/store";
+  import type { AppData } from "./types/AppData";
+  import { ColorSchema } from "./types/Preferences";
 
   export let task: Task;
   export let activeGroup: null | string;
   export let __class: string = "";
 
   const dispatch = createEventDispatcher();
+
+  const ctx: Writable<AppData> = getContext('appData');
+
+  $: schema = $ctx.activeSchema || ColorSchema.Dull;
 
   $: groups = task.highlights.reduce(
     (acc, highlight, i) => {
@@ -24,7 +32,7 @@
 
       return acc;
     },
-    [] as { label: string; count: number; color: string; id: string }[]
+    [] as { label: string; count: number; color: number; id: string }[]
   );
 </script>
 
@@ -45,7 +53,7 @@
         on:click={() => dispatch("selectGroup", { group: group.id })}
       >
         <div
-          style="background-color:{group.color};"
+          style="background-color:{highlightColor(schema, group.color)};"
           class="w-4 h-4 shrink-0 grow-0 mr-2 rounded-full"
         ></div>
         <span

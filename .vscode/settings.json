@@ -1,4 +1,7 @@
 {
   "svelte.enable-ts-plugin": true,
-  "cSpell.language": "en,ru"
+  "cSpell.language": "en,ru",
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 80,
+
 }

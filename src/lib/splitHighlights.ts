@@ -25,6 +25,6 @@ export function splitHighlights(task: Task) {
       }
       return acc;
     },
-    [] as { chars: string; group?: string; color?: string; offset: number }[]
+    [] as { chars: string; group?: string; color?: number; offset: number }[]
   )
 }

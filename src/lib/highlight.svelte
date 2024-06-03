@@ -1,17 +1,31 @@
 <script lang="ts">
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
+  import type { AppData } from "./types/AppData";
+  import { ColorSchema } from "./types/Preferences";
+  import { highlightColor } from "./color";
+
   export let text: string;
-  export let color: string;
-  export let onRemove: () => void;
+  export let color: number;
+  export let onRemove: undefined | (() => void) = undefined;
+
+  const ctx: Writable<AppData> = getContext('appData');
+
+  $: schema = $ctx.activeSchema || ColorSchema.Dull;
+
+  $: colorValue = highlightColor(schema, color)
 </script>
 
 <div class="inline relative">
   <span 
-    style="background-color: {color};" 
+    style="background-color: {colorValue};" 
     class="rounded-sm"
   >
     {text}
   </span>
-  <button style="background-color: {color};" class="text-base font-thin rounded-t-sm leading-none absolute h-3 px-2 -ml-7 -mt-1" title="Удалить выделение" on:click={onRemove}>
-    ×
-  </button>
+  {#if onRemove}
+    <button style="background-color: {colorValue};" class="text-base font-thin rounded-t-sm leading-none absolute h-3 px-2 -ml-7 -mt-1" title="Удалить выделение" on:click={onRemove}>
+      ×
+    </button>
+  {/if}
 </div>

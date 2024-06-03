@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "generate-fixture": "PIPENV_PIPFILE=./fixture_gen/Pipfile pipenv run python fixture_gen/main.py"
   },
   "license": "MIT",
   "dependencies": {
@@ -19,6 +20,7 @@
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@tailwindcss/typography": "^0.5.13",
     "@tauri-apps/cli": "^1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
@@ -28,7 +30,6 @@
     "tailwindcss": "^3.4.3",
     "tslib": "^2.4.1",
     "typescript": "^5.0.0",
-    "vite": "^5.0.3",
-    "@tailwindcss/typography": "^0.5.13"
+    "vite": "^5.0.3"
   }
 }

@@ -3,25 +3,45 @@
 
   export let task: Task;
   export let isCurrent: boolean;
+  const ONE_DAY = 24*60*60*1000;
+
+  const today = new Date()
+  let complete_date: string | undefined;
+  $: complete_date = (() => {
+    if (task?.output?.completed_ts) {
+      const date = new Date(task.output.completed_ts);
+      if (date.valueOf() - today.valueOf() > ONE_DAY || date.getDay() != today.getDay()) {
+        return date.toLocaleDateString('ru-RU', {year: 'numeric', day: 'numeric', month: 'numeric', hour: 'numeric', minute: 'numeric'})
+      }
+      else {
+        return `Сегодня в ${date.getHours()}:${date.getMinutes()}`
+      }
+    }
+  })();
+
 </script>
 
 <a
   href="/{task.input.id}/{task.output ? 'summarize' : 'highlight'}"
-  class="h-full w-full p-2 flex flex-col border-b border-solid border-gray-500"
+  class="h-full w-full p-2 flex flex-col justify-between border-b border-solid border-gray-500"
 >
   <h5>#{task.input.id}</h5>
 
   {#if task.output}
-    <p>{task.output.text}</p>
+    <p class="whitespace-nowrap overflow-hidden overflow-ellipsis">
+      {task.output.text}
+    </p>
   {/if}
 
-  {#if isCurrent}
-    <p>Текущая</p>
-  {:else if task.output}
-    <p>Выполнена: {task.output.completed_ts}</p>
-  {:else if task.postponed}
-    <p>Отложенная</p>
-  {:else}
-    <p>Новая</p>
-  {/if}
+  <div class="flex justify-between text-gray-600">
+    {#if isCurrent}
+      <p>Текущая</p>
+    {:else if task.output && complete_date}
+      <p>Выполнена: {complete_date}</p>
+    {:else if task.postponed}
+      <p>Отложенная</p>
+    {:else}
+      <p>Новая</p>
+    {/if}
+  </div>
 </a>

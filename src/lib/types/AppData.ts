@@ -1,3 +1,4 @@
+import type { ColorSchema, Preferences } from "./Preferences";
 import type { Task } from "./Task";
 
 export interface AppData {
@@ -5,5 +6,7 @@ export interface AppData {
   total_entries?: number,
   entries_window?: [number, number],
   current_entry?: string,
-  entries?: Task[]
+  entries?: Task[],
+  preferences?: Preferences,
+  activeSchema?: ColorSchema,
 }

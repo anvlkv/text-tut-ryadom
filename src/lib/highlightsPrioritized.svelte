@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { splitHighlights } from "./splitHighlights";
+  import Highlight from "./highlight.svelte";
+import { splitHighlights } from "./splitHighlights";
   import type { Task } from "./types/Task";
 
   export let task: Task;
@@ -7,10 +8,12 @@
   $: lines = splitHighlights(task);
 </script>
 
-<div class="{__class} flex flex-col">
+<div class="{__class} flex flex-col leading-relaxed">
   {#each lines as line}
     {#if line.group && line.color}
-      <p style="background-color: {line.color};" class="rounded-sm">{line.chars}</p>
+      <p>
+        <Highlight text={line.chars} color={line.color}/>
+      </p>
     {:else}
       <p class="text-sm">{line.chars}</p>
     {/if}

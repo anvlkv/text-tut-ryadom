@@ -5,7 +5,7 @@
   import type { Writable } from "svelte/store";
 
   const ctx: Writable<AppData> = getContext("appData");
-  const taskHeight = 4;
+  const taskHeight = 5;
 
   $: windowEntries = ($ctx.entries || []).slice(
     $ctx.entries_window?.[0],
@@ -19,7 +19,7 @@
   );
 </script>
 
-<aside class="basis-1/5 shrink-0 grow-0 border-r border-solid border-gray-500">
+<aside class="basis-1/5 shrink-0 grow-0 text-sm border-r border-solid border-gray-500">
   <style>
     .task-entry {
       height: var(--entry-height);

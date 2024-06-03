@@ -4,17 +4,16 @@
   import type { AppData } from "$lib/types/AppData";
   import HighlightsList from "$lib/highlightsList.svelte";
   import HighlightsArea from "$lib/highlightsArea.svelte";
-  import { INFO_COLORS } from "$lib/colors";
+  import { INFO_COLORS } from "$lib/defaults";
 
   const ctx: Writable<AppData> = getContext("appData");
 
   $: task = $ctx.entries!.find((e) => e.input.id === $ctx.current_entry);
 
   let highlightGroup: string | null = null;
-  let highlightColor: string;
+  let highlightColor: number;
 
-  $: highlightColor =
-    INFO_COLORS[(task?.highlights.length || 0) % INFO_COLORS.length];
+  $: highlightColor = (task?.highlights.length || 0) % INFO_COLORS;
 
   function addHighlight({
     detail,
@@ -70,7 +69,7 @@
     <h2 class="w-2/3 text-center mb-8 text-gray-500 font-semibold text-lg">
       Выдели части текста, сообщающие разные идеи:
     </h2>
-    <div class="flex my-auto overflow-y-auto">
+    <div class="flex my-auto overflow-y-auto overflow-x-visible">
       <HighlightsArea
         __class="highlight-area basis-2/3 shrink-0 grow-0"
         {task}
