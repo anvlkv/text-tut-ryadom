@@ -33,7 +33,7 @@
           ...task!,
           output: {
             ...task!.output!,
-            completed_ts: completed.toUTCString(),
+            completed_ts: completed.toISOString(),
           },
         };
     console.log(saveTask);
@@ -82,7 +82,7 @@
     ctx.update((d) => {
       const postponedTask = {
         ...d.entries!.splice(taskIndex, 1)[0]!,
-        postponed: new Date().toUTCString(),
+        postponed: new Date().toISOString(),
       };
       scheduleRestore(postponedTask);
       return d;

@@ -15,10 +15,13 @@ pub fn write_output(file: &str, output: OutputRecord) -> Result<(), String> {
     let mut entries = read_outputs(file)?;
 
     entries.retain(|e| e.text_id != output.text_id);
+    entries.push(output);
 
     let mut writer = csv::Writer::from_path(file).map_err(|e| e.to_string())?;
 
-    writer.serialize(output).map_err(|e| e.to_string())?;
+    for record in entries {
+        writer.serialize(record).map_err(|e| e.to_string())?;
+    }
 
     writer.flush().map_err(|e| e.to_string())?;
 
