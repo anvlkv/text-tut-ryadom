@@ -56,7 +56,8 @@
         "icons/32.png",
         "icons/32@2x.png",
         "icons/128.png",
-        "icons/128@2x.png"
+        "icons/128@2x.png",
+        "icons/icon.ico"
       ]
     }
   }

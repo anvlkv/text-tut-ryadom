@@ -37,7 +37,7 @@
       await writeTextFile(
         APP_DATA_FILE,
         JSON.stringify({ src_dir, current_entry, preferences }),
-        { dir: BaseDirectory.AppData }
+        { dir: BaseDirectory.AppData },
       );
 
       console.info("app data stored");
@@ -115,7 +115,7 @@
     console.info("loading");
     try {
       const { src_dir, current_entry, preferences } = JSON.parse(
-        await readTextFile(APP_DATA_FILE, { dir: BaseDirectory.AppData })
+        await readTextFile(APP_DATA_FILE, { dir: BaseDirectory.AppData }),
       );
       $data.current_entry = current_entry;
       $data.src_dir = src_dir;
@@ -152,7 +152,7 @@
     }
   }
 
-  onMount(async () => {
+  onMount(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     let listener: undefined | ((ev: MediaQueryListEvent) => void);
     data.subscribe((d) => {
@@ -162,7 +162,7 @@
         }
         if (
           [ColorSchema.BrightAuto, ColorSchema.HighContrastAuto].includes(
-            d.preferences.colorSchema
+            d.preferences.colorSchema,
           )
         ) {
           const contrast =
@@ -198,9 +198,11 @@
       }
     });
 
-    await load();
-
-    await invoke("close_splashscreen");
+    load()
+      .then(() => invoke("close_splashscreen"))
+      .then(() => {
+        console.info("app loaded");
+      });
 
     return () => {
       if (listener) {
