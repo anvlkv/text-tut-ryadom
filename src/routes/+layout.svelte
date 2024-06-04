@@ -18,10 +18,18 @@
   import { ColorSchema } from "$lib/types/Preferences";
   import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
 
-  const data = setContext("appData", writable({} as AppData));
-
   export const WINDOW_SIZE = 100;
   const APP_DATA_FILE = "config/app_data.json";
+
+  const data = setContext("appData", writable({} as AppData));
+  setContext("storeAppData", storeAppData);
+  setContext("loadDir", loadDir);
+  setContext("prerequisites", prerequisites);
+
+  let theme = ColorSchema.Dull;
+  let fontSizeCategory: undefined | string;
+
+  $: $data.activeSchema = theme;
 
   async function storeAppData() {
     const { src_dir, current_entry, preferences } = $data;
@@ -45,10 +53,6 @@
       console.error("failed to store app data", e);
     }
   }
-
-  setContext("storeAppData", storeAppData);
-  setContext("loadDir", loadDir);
-  setContext("prerequisites", prerequisites);
 
   async function loadDir() {
     console.info("loading dir");
@@ -100,6 +104,7 @@
   }
 
   async function prerequisites() {
+    console.log($data);
     if (!$data.preferences) {
       await goto("/setup");
     } else if (!$data.src_dir) {
@@ -130,11 +135,6 @@
 
     await prerequisites();
   }
-
-  let theme = ColorSchema.Dull;
-  let fontSizeCategory: undefined | string;
-
-  $: $data.activeSchema = theme;
 
   function sysDark(dark: boolean, contrast: boolean) {
     if (contrast) {

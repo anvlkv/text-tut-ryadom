@@ -1,8 +1,8 @@
 [package]
-name = "text-tut"
-version = "0.0.0"
+name = "anton-tut-text"
+version = "0.1.1"
 description = "A Tauri App"
-authors = ["you"]
+authors = ["a.nvlkv <a.nvlkv@pm.me>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

@@ -1,6 +1,6 @@
 {
-  "name": "text-tut",
-  "version": "0.0.0",
+  "name": "anton-tut-text",
+  "version": "0.1.1",
   "description": "",
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "tauri": "tauri",
     "generate-fixture": "PIPENV_PIPFILE=./fixture_gen/Pipfile pipenv run python fixture_gen/main.py"
   },
-  "license": "MIT",
+  "license": "CC-BY-ND-4.0",
   "dependencies": {
     "@tauri-apps/api": "^1",
     "color2k": "^2.0.3",

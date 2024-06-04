@@ -6,8 +6,8 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "Текст тут рядом",
-    "version": "0.1.0"
+    "productName": "Anton-tut-text",
+    "version": "0.1.1"
   },
   "tauri": {
     "allowlist": {

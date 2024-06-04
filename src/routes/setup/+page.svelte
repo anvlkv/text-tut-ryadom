@@ -1,10 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import {
-    BASE_FONT_SIZE,
-    MAX_FONT_SIZE,
-    MIN_FONT_SIZE,
-  } from "$lib/values";
+  import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
   import Highlight from "$lib/highlight.svelte";
   import String from "$lib/string.svelte";
   import type { AppData } from "$lib/types/AppData";
@@ -12,10 +8,10 @@
   import { getContext, onMount } from "svelte";
   import type { ChangeEventHandler } from "svelte/elements";
   import type { Writable } from "svelte/store";
-    import Button from "$lib/button.svelte";
+  import Button from "$lib/button.svelte";
 
   const ctx: Writable<AppData> = getContext("appData");
-  const storeAppData: ()=> Promise<void> = getContext('storeAppData')
+  const storeAppData: () => Promise<void> = getContext("storeAppData");
 
   let preferDark = false;
   let preferHighContrast = false;
@@ -42,9 +38,11 @@
 
   function applySetup(e: Event) {
     e.preventDefault();
-    storeAppData().then(() => {
-      goto("/");
-    })
+    storeAppData()
+      .then(() => {
+        console.log("settings done");
+        window.location.href = "/";
+      });
   }
 
   function resetSetup(e: Event) {
@@ -106,7 +104,14 @@
     });
   };
 
-  $: {
+  onMount(() => {
+    const preferDarkMq = window.matchMedia("(prefers-color-scheme: dark)");
+    const preferHightContrastMq = window.matchMedia("(prefers-contrast: more)");
+
+    preferDarkMq.addEventListener("change", darkListener);
+
+    preferHightContrastMq.addEventListener("change", contrastListener);
+
     if (!$ctx.preferences) {
       ctx.update((d) => {
         d.preferences = {
@@ -117,15 +122,6 @@
         return d;
       });
     }
-  }
-
-  onMount(() => {
-    const preferDarkMq = window.matchMedia("(prefers-color-scheme: dark)");
-    const preferHightContrastMq = window.matchMedia("(prefers-contrast: more)");
-
-    preferDarkMq.addEventListener("change", darkListener);
-
-    preferHightContrastMq.addEventListener("change", contrastListener);
 
     return () => {
       preferDarkMq.removeEventListener("change", darkListener);
@@ -163,9 +159,9 @@
       <label
         class="overflow-hidden flex flex-col justify-between pb-2 break-words aspect-square items-center basis-1/2 shrink-0 grow-0 rounded border border-gray-400/50 dc:border-white lc:border-black"
       >
-        <p class="flex flex-col text-center">
-          <small class="block text-sm">Сухо, вежливо, на</small>
-          <strong class="block text-3xl font-bold">Вы</strong>
+        <p class="flex flex-col grow justify-between text-center">
+          <small class="block mt-2 text-sm">Сухо, вежливо, на</small>
+          <strong class="block text-5xl mt-auto mb-2 font-black">Вы</strong>
         </p>
         <input
           name="tone"
@@ -178,9 +174,9 @@
       <label
         class="overflow-hidden flex flex-col justify-between pb-2 break-words aspect-square items-center basis-1/2 shrink-0 grow-0 rounded border border-gray-400/50 dc:border-white lc:border-black"
       >
-        <p class="flex flex-col text-center">
-          <small class="block text-sm">Дружелюбно, развернуто, на</small>
-          <strong class="block text-3xl font-bold">Ты</strong>
+        <p class="flex flex-col grow justify-between text-center">
+          <small class="block mt-2 text-sm">Дружелюбно, развернуто, на</small>
+          <strong class="block text-5xl mt-auto mb-2 font-black">Ты</strong>
         </p>
         <input
           name="tone"
@@ -208,7 +204,9 @@
       <div
         class="grid grid-cols-1 gap-4 col-span-1 items-center justify-center"
       >
-        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center">
+        <h5
+          class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center"
+        >
           Тусклая
         </h5>
         <div class="grid grid-cols-1 col-span-1">
@@ -234,7 +232,9 @@
       <div
         class="grid grid-cols-5 gap-4 col-span-5 items-center justify-center"
       >
-        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center">
+        <h5
+          class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center"
+        >
           Мягкая
         </h5>
         <div class="grid grid-cols-5 gap-4 col-span-5">
@@ -328,7 +328,9 @@
       <div
         class="grid grid-cols-3 gap-4 col-span-3 items-center justify-center"
       >
-        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center">
+        <h5
+          class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center"
+        >
           Яркая
         </h5>
         <div class="grid grid-cols-3 gap-4 col-span-3">
@@ -388,7 +390,9 @@
       <div
         class="grid grid-cols-3 gap-4 col-span-3 items-center justify-center"
       >
-        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center">
+        <h5
+          class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center"
+        >
           Контрастная
         </h5>
         <div class="grid grid-cols-3 gap-4 col-span-3">
@@ -538,20 +542,10 @@
 <footer
   class="w-full sticky bottom-0 flex justify-end py-3 px-4 bg-gray-50 dark:bg-gray-900 dc:bg-stone-950 lc:bg-stone-50 yellow:bg-yellow-50 green:bg-green-50 warm:bg-red-50 cold:bg-blue-50 earth:bg-earth-50 shadow-sm"
 >
-  <Button
-    on:click={resetSetup}
-    __class="mx-4"
-    type="reset"
-    form="preferences"
-  >
+  <Button on:click={resetSetup} __class="mx-4" type="reset" form="preferences">
     Сбросить
   </Button>
-  <Button
-    on:click={applySetup}
-    cta={true}
-    type="submit"
-    form="preferences"
-  >
+  <Button on:click={applySetup} cta={true} type="submit" form="preferences">
     Готово
   </Button>
 </footer>
