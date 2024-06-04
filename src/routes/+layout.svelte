@@ -113,9 +113,6 @@
 
   async function load() {
     console.info("loading");
-
-    await invoke("close_splashscreen");
-
     try {
       const { src_dir, current_entry, preferences } = JSON.parse(
         await readTextFile(APP_DATA_FILE, { dir: BaseDirectory.AppData })
@@ -155,7 +152,7 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     let listener: undefined | ((ev: MediaQueryListEvent) => void);
     data.subscribe((d) => {
@@ -201,7 +198,9 @@
       }
     });
 
-    load().then(() => console.info("app loaded"));
+    await load();
+
+    await invoke("close_splashscreen");
 
     return () => {
       if (listener) {

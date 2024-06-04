@@ -14,8 +14,15 @@ const config = {
     vitePreprocess(),
   ],
   kit: {
-    adapter: adapter(),
+    adapter: adapter({
+      fallback: 'app.html',
+      strict: false,
+    }),
   },
+  prerender: {
+    crawl: true,
+    entries: ['*', '/0/highlights/', '/0/summary/']
+  }
 };
 
 export default config;
