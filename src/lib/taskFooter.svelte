@@ -6,11 +6,12 @@
   import { invoke } from "@tauri-apps/api";
   import { goto } from "$app/navigation";
   import { type Task } from "$lib/types/Task";
+    import Button from "./button.svelte";
 
   const ctx: Writable<AppData> = getContext("appData");
   const POSTPONE_DURATION = 5 * 60 * 1000;
 
-  $: task = $ctx.entries!.find((e) => e.input.id === $ctx.current_entry);
+  $: task = $ctx.entries?.find((e) => e.input.id === $ctx.current_entry);
 
   $: nextBtn = $page.route.id?.endsWith("[task]/highlight")
     ? "Далее"
@@ -97,23 +98,22 @@
 </script>
 
 <footer
-  class="w-full flex justify-end py-3 px-4 border-t border-solid border-gray-100 bg-gray-50 shadow-sm"
+  class="w-full flex justify-end py-3 px-4 bg-gray-50 dark:bg-gray-900 dc:bg-stone-950 lc:bg-stone-50 yellow:bg-yellow-50 green:bg-green-50 warm:bg-red-50 cold:bg-blue-50 earth:bg-earth-50 shadow-sm"
 >
-  <button
+  <Button
     on:click={postpone}
     title="Отложенная задача вернется в список через некоторое время"
-    class="px-4 py-2 mx-4 rounded border border-gray-600"
+    __class="mx-4"
   >
     Отложить
-  </button>
+  </Button>
   {#if nextBtn}
-    <button
+    <Button
       on:click={next}
-      class="{!nextBtnEnabled &&
-        'opacity-30'} px-4 py-2 rounded border border-gray-600 bg-blue-500 text-white"
       disabled={!nextBtnEnabled}
+      cta={true}
     >
       {nextBtn}
-    </button>
+    </Button>
   {/if}
 </footer>

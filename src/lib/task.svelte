@@ -23,7 +23,7 @@
 
 <a
   href="/{task.input.id}/{task.output ? 'summarize' : 'highlight'}"
-  class="h-full w-full p-2 flex flex-col justify-between border-b border-solid border-gray-500"
+  class="h-full w-full p-2 flex flex-col justify-between border-b border-solid border-gray-400/50 dc:border-white lc:border-black {isCurrent && 'bg-gray-50 dark:bg-gray-900 dc:bg-stone-950 lc:bg-stone-50 yellow:bg-yellow-50 green:bg-green-50 warm:bg-red-50 cold:bg-blue-50 earth:bg-earth-50'}"
 >
   <h5>#{task.input.id}</h5>
 
@@ -35,7 +35,7 @@
 
   <div class="flex justify-between text-gray-600">
     {#if isCurrent}
-      <p>Текущая</p>
+      <p class="font-bold">Текущая</p>
     {:else if task.output && complete_date}
       <p>Выполнена: {complete_date}</p>
     {:else if task.postponed}

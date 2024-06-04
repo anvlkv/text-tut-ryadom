@@ -4,11 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-transformers = "*"
+datasets = "*"
 huggingface-hub = "*"
 torch = "*"
-torchvision = "*"
-torchaudio = "*"
 
 [dev-packages]
 

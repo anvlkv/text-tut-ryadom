@@ -89,7 +89,7 @@
 </script>
 
 <p
-  class="{__class} leading-loose mx-auto max-w-prose p-8"
+  class="{__class} leading-loose mx-auto max-w-prose h-max p-8"
   bind:this={container}
   on:pointerdown={onPointerDown}
 >

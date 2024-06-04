@@ -14,7 +14,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@tauri-apps/api": "^1"
+    "@tauri-apps/api": "^1",
+    "color2k": "^2.0.3",
+    "svelte-portal": "^2.2.1"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.1",

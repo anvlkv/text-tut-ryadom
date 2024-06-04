@@ -2,10 +2,9 @@
   import { goto } from "$app/navigation";
   import {
     BASE_FONT_SIZE,
-    INFO_COLORS,
     MAX_FONT_SIZE,
     MIN_FONT_SIZE,
-  } from "$lib/defaults";
+  } from "$lib/values";
   import Highlight from "$lib/highlight.svelte";
   import String from "$lib/string.svelte";
   import type { AppData } from "$lib/types/AppData";
@@ -13,6 +12,7 @@
   import { getContext, onMount } from "svelte";
   import type { ChangeEventHandler } from "svelte/elements";
   import type { Writable } from "svelte/store";
+    import Button from "$lib/button.svelte";
 
   const ctx: Writable<AppData> = getContext("appData");
   const storeAppData: ()=> Promise<void> = getContext('storeAppData')
@@ -161,7 +161,7 @@
     </h4>
     <div class="flex gap-4">
       <label
-        class="overflow-hidden flex flex-col justify-between pb-2 break-words aspect-square items-center basis-1/2 shrink-0 grow-0 rounded border border-gray-400"
+        class="overflow-hidden flex flex-col justify-between pb-2 break-words aspect-square items-center basis-1/2 shrink-0 grow-0 rounded border border-gray-400/50 dc:border-white lc:border-black"
       >
         <p class="flex flex-col text-center">
           <small class="block text-sm">Сухо, вежливо, на</small>
@@ -176,7 +176,7 @@
         />
       </label>
       <label
-        class="overflow-hidden flex flex-col justify-between pb-2 break-words aspect-square items-center basis-1/2 shrink-0 grow-0 rounded border border-gray-400"
+        class="overflow-hidden flex flex-col justify-between pb-2 break-words aspect-square items-center basis-1/2 shrink-0 grow-0 rounded border border-gray-400/50 dc:border-white lc:border-black"
       >
         <p class="flex flex-col text-center">
           <small class="block text-sm">Дружелюбно, развернуто, на</small>
@@ -208,14 +208,14 @@
       <div
         class="grid grid-cols-1 gap-4 col-span-1 items-center justify-center"
       >
-        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400 text-center">
+        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center">
           Тусклая
         </h5>
         <div class="grid grid-cols-1 col-span-1">
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="dull" src="/icon.png" />
+            <img alt="dull" src="/Dull.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -234,14 +234,14 @@
       <div
         class="grid grid-cols-5 gap-4 col-span-5 items-center justify-center"
       >
-        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400 text-center">
+        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center">
           Мягкая
         </h5>
         <div class="grid grid-cols-5 gap-4 col-span-5">
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="SoftGreen" src="/icon.png" />
+            <img alt="SoftGreen" src="/Green.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -256,9 +256,9 @@
             />
           </label>
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="SoftYellow" src="/icon.png" />
+            <img alt="SoftYellow" src="/Yellow.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -273,9 +273,9 @@
             />
           </label>
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="SoftCold" src="/icon.png" />
+            <img alt="SoftCold" src="/Cold.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -290,9 +290,9 @@
             />
           </label>
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="SoftWarm" src="/icon.png" />
+            <img alt="SoftWarm" src="/Warm.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -307,9 +307,9 @@
             />
           </label>
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="SoftEarth" src="/icon.png" />
+            <img alt="SoftEarth" src="/Earth.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -328,14 +328,14 @@
       <div
         class="grid grid-cols-3 gap-4 col-span-3 items-center justify-center"
       >
-        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400 text-center">
+        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center">
           Яркая
         </h5>
         <div class="grid grid-cols-3 gap-4 col-span-3">
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="BrightDark" src="/icon.png" />
+            <img alt="BrightDark" src="/Dark.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -350,9 +350,9 @@
             />
           </label>
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="BrightLight" src="/icon.png" />
+            <img alt="BrightLight" src="/Light.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -367,9 +367,9 @@
             />
           </label>
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="BrightAuto" src="/icon.png" />
+            <img alt="BrightAuto" src="/SysBright.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -388,14 +388,14 @@
       <div
         class="grid grid-cols-3 gap-4 col-span-3 items-center justify-center"
       >
-        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400 text-center">
+        <h5 class="col-span-full h-6 mb-2 border-b border-gray-400/50 dc:border-white lc:border-black text-center">
           Контрастная
         </h5>
         <div class="grid grid-cols-3 gap-4 col-span-3">
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="HighContrastDark" src="/icon.png" />
+            <img alt="HighContrastDark" src="/DC.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -410,9 +410,9 @@
             />
           </label>
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="HighContrastLight" src="/icon.png" />
+            <img alt="HighContrastLight" src="/LC.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -427,9 +427,9 @@
             />
           </label>
           <label
-            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400"
+            class="overflow-hidden flex flex-col justify-between pb-2 break-words items-center rounded border border-gray-400/50 dc:border-white lc:border-black"
           >
-            <img alt="HighContrastAuto" src="/icon.png" />
+            <img alt="HighContrastAuto" src="/SysContrast.png" />
             <p
               class="overflow-ellipsis text-xs w-full overflow-hidden text-center"
             >
@@ -536,22 +536,22 @@
 </form>
 
 <footer
-  class="w-full sticky bottom-0 flex justify-end py-3 px-4 border-t border-solid border-gray-100 bg-gray-50 shadow-sm"
+  class="w-full sticky bottom-0 flex justify-end py-3 px-4 bg-gray-50 dark:bg-gray-900 dc:bg-stone-950 lc:bg-stone-50 yellow:bg-yellow-50 green:bg-green-50 warm:bg-red-50 cold:bg-blue-50 earth:bg-earth-50 shadow-sm"
 >
-  <button
+  <Button
+    on:click={resetSetup}
+    __class="mx-4"
     type="reset"
     form="preferences"
-    class="px-4 py-2 mx-4 rounded border border-gray-600"
-    on:click={resetSetup}
   >
     Сбросить
-  </button>
-  <button
+  </Button>
+  <Button
+    on:click={applySetup}
+    cta={true}
     type="submit"
     form="preferences"
-    class="px-4 py-2 rounded border border-gray-600 bg-blue-500 text-white"
-    on:click={applySetup}
   >
     Готово
-  </button>
+  </Button>
 </footer>

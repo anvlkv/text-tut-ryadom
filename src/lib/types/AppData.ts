@@ -9,4 +9,5 @@ export interface AppData {
   entries?: Task[],
   preferences?: Preferences,
   activeSchema?: ColorSchema,
+  loading?: boolean
 }

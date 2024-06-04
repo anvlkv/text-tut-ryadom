@@ -4,16 +4,19 @@
   import type { AppData } from "$lib/types/AppData";
   import HighlightsList from "$lib/highlightsList.svelte";
   import HighlightsArea from "$lib/highlightsArea.svelte";
-  import { INFO_COLORS } from "$lib/defaults";
+  import { highlightColor, textColor } from "$lib/color";
+  import { ColorSchema } from "$lib/types/Preferences";
+  import String from "$lib/string.svelte";
 
   const ctx: Writable<AppData> = getContext("appData");
 
-  $: task = $ctx.entries!.find((e) => e.input.id === $ctx.current_entry);
+  $: task = $ctx.entries?.find((e) => e.input.id === $ctx.current_entry);
 
   let highlightGroup: string | null = null;
-  let highlightColor: number;
+  let highlightColorIndex: number;
 
-  $: highlightColor = (task?.highlights.length || 0) % INFO_COLORS;
+  $: highlightColorIndex = (task?.highlights.length || 0) + 1;
+  $: schema = $ctx.activeSchema || ColorSchema.Dull;
 
   function addHighlight({
     detail,
@@ -21,13 +24,13 @@
     ctx.update((d) => {
       const task = d.entries?.find((e) => e.input.id === $ctx.current_entry)!;
       const group_id = highlightGroup || task.highlights.length.toString();
-      detail.forEach(({ start, end }) => {
+      detail.filter(({start, end}) => end > start).forEach(({ start, end }) => {
         task?.highlights.push({
           text_id: task.input.id,
           start,
           end,
           group_id,
-          color: highlightColor,
+          color: highlightColorIndex,
         });
       });
       return d;
@@ -55,33 +58,49 @@
   }: CustomEvent<{ group: string }>) {
     const selected = task?.highlights.find((h) => h.group_id === group)!;
     highlightGroup = selected.group_id;
-    highlightColor = selected.color;
+    highlightColorIndex = selected.color;
   }
 </script>
 
-<div class="contents" style="--highlight-color: {highlightColor};">
+<div
+  class="contents"
+  style="--highlight-color: {highlightColor(
+    schema,
+    highlightColorIndex
+  )}; --highlight-text-color: {textColor(schema, highlightColorIndex)};"
+>
   <style>
     .highlight-area *::selection {
       background-color: var(--highlight-color);
+      color: var(--highlight-text-color);
     }
   </style>
   {#if task}
     <h2 class="w-2/3 text-center mb-8 text-gray-500 font-semibold text-lg">
-      Выдели части текста, сообщающие разные идеи:
+      <String>
+        <svelte:fragment slot="familiar">
+          Прочитай текст и выдели его смысловые части:
+        </svelte:fragment>
+        <svelte:fragment>
+          Прочитайте текст и выделите смысловые фрагменты:
+        </svelte:fragment>
+      </String>
     </h2>
-    <div class="flex my-auto overflow-y-auto overflow-x-visible">
-      <HighlightsArea
-        __class="highlight-area basis-2/3 shrink-0 grow-0"
-        {task}
-        on:highlightAdded={addHighlight}
-        on:highlightRemoved={removeHighlight}
-      />
-      <HighlightsList
-        __class="basis-1/3 shrink-0 grow-0"
-        {task}
-        activeGroup={highlightGroup}
-        on:selectGroup={onSelectGroup}
-      />
+    <div class="overflow-y-auto overflow-x-visible sticky h-full">
+      <div class="flex my-auto">
+        <HighlightsArea
+          __class="highlight-area basis-2/3"
+          {task}
+          on:highlightAdded={addHighlight}
+          on:highlightRemoved={removeHighlight}
+        />
+        <HighlightsList
+          __class="basis-72"
+          {task}
+          activeGroup={highlightGroup}
+          on:selectGroup={onSelectGroup}
+        />
+      </div>
     </div>
   {/if}
 </div>

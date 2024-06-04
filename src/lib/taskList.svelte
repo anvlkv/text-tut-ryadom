@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import type { AppData } from "./types/AppData";
+  import { page } from "$app/stores";
   import Task from "./task.svelte";
   import type { Writable } from "svelte/store";
 
@@ -17,9 +18,15 @@
     (($ctx.total_entries || 0) - ($ctx.entries_window?.[1] || 0)) * taskHeight,
     0
   );
+
+  let container: HTMLUListElement;
+  $: {
+    const taskId = $page.params['task'];
+    container?.querySelector(`#task-${taskId}`)?.scrollIntoView();
+  }
 </script>
 
-<aside class="basis-1/5 shrink-0 grow-0 text-sm border-r border-solid border-gray-500">
+<aside class="basis-1/5 shrink-0 grow-0 text-sm border-r border-solid border-gray-400/50 dc:border-white lc:border-black">
   <style>
     .task-entry {
       height: var(--entry-height);
@@ -27,11 +34,12 @@
   </style>
   <ul
     style="--entry-height: {`${taskHeight}rem`};"
-    class="overflow-x-hidden overflow-y-auto"
+    class="overflow-x-hidden overflow-y-auto max-h-full"
+    bind:this={container}
   >
     <li style={`height: ${heightBefore}rem`} />
     {#each windowEntries as entry (entry.input.id)}
-      <li class="task-entry">
+      <li id="task-{entry.input.id}" class="task-entry">
         <Task task={entry} isCurrent={$ctx.current_entry === entry.input.id} />
       </li>
     {/each}

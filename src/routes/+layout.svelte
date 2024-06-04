@@ -11,13 +11,12 @@
   import { open } from "@tauri-apps/api/dialog";
   import { onMount, setContext } from "svelte";
   import Header from "$lib/header.svelte";
-  import TaskList from "$lib/taskList.svelte";
   import type { AppData } from "$lib/types/AppData";
   import type { Task } from "$lib/types/Task";
   import { goto } from "$app/navigation";
   import { writable } from "svelte/store";
   import { ColorSchema } from "$lib/types/Preferences";
-  import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/defaults";
+  import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
 
   const data = setContext("appData", writable({} as AppData));
 
@@ -60,6 +59,9 @@
       dir = (await open({
         title: "Выбери папку с проектом",
         directory: true,
+      }).then((d) => {
+        $data.loading = true;
+        return d;
       })!) as string;
     } else {
       dir = $data.src_dir;
@@ -79,17 +81,22 @@
       const windowStart = Math.max(entryIndex - WINDOW_SIZE / 2, 0);
       $data.entries_window = [windowStart, windowStart + WINDOW_SIZE];
 
-      const entry_id = $data.current_entry! || $data.entries![0].input.id;
-      const entry_step = $data.entries!.find((e) => e.input.id === entry_id)
-        ?.output
-        ? "summarize"
-        : "highlight";
-
-      await goto(`/${entry_id}/${entry_step}`, { replaceState: true });
+      await openProjectPage();
     } catch {
       $data.src_dir = undefined;
       console.warn("loading dir failed. try again");
     }
+    $data.loading = false;
+  }
+
+  async function openProjectPage() {
+    const entry_id = $data.current_entry! || $data.entries![0].input.id;
+    const entry_step = $data.entries!.find((e) => e.input.id === entry_id)
+      ?.output
+      ? "summarize"
+      : "highlight";
+
+    await goto(`/${entry_id}/${entry_step}`, { replaceState: true });
   }
 
   async function prerequisites() {
@@ -97,8 +104,10 @@
       await goto("/setup");
     } else if (!$data.src_dir) {
       await goto("/directory");
-    } else {
+    } else if (!$data.entries) {
       await loadDir();
+    } else {
+      await openProjectPage();
     }
   }
 
@@ -204,18 +213,9 @@
 
 <div class="contents" data-theme={theme} data-font-size={fontSizeCategory}>
   <main
-    class="font-body select-none h-screen w-screen overflow-hidden flex flex-col items-stretch justify-stretch bg-gray-50 text-gray-950 dull:bg-gray-200 dull:text-gray-800 dc:bg-black dc:text-white lc:bg-white lc:text-black dark:bg-gray-950 dark:text-gray-50 earth:bg-earth-200 earth:text-emerald-950 yellow:bg-yellow-200 yellow:text-yellow-950 green:bg-green-200 green:text-green-950 warm:bg-orange-200 warm:text-rose-950 cold:bg-sky-200 cold:text-blue-950"
+    class="font-body relative select-none h-screen w-screen overflow-hidden flex flex-col items-stretch justify-stretch bg-gray-50 text-gray-950 dull:bg-gray-200 dull:text-gray-800 dc:bg-black dc:text-white lc:bg-white lc:text-black dark:bg-gray-950 dark:text-gray-50 earth:bg-earth-100 earth:text-emerald-950 yellow:bg-yellow-100 yellow:text-yellow-950 green:bg-green-100 green:text-green-950 warm:bg-orange-100 warm:text-rose-950 cold:bg-sky-100 cold:text-blue-950"
   >
-    {#if !$data.total_entries}
-      <slot />
-    {:else}
-      <Header />
-      <div
-        class="flex grow items-stretch justify-stretch w-full overflow-hidden"
-      >
-        <TaskList />
-        <slot />
-      </div>
-    {/if}
+    <Header />
+    <slot />
   </main>
 </div>
