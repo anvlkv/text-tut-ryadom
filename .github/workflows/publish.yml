@@ -62,6 +62,3 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
-      - uses: actions/attest-build-provenance@v1
-        with: 
-          subject-path: ${{join(steps.t_build.outputs.artifactPaths, '/**/*')}}
