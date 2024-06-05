@@ -6,7 +6,7 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "Anton-tut-text",
+    "productName": "Текст тут рядом",
     "version": "0.1.1"
   },
   "tauri": {
@@ -59,11 +59,23 @@
         "icons/128@2x.png",
         "icons/icon.ico"
       ],
+      
+      "macOS": {
+        "minimumSystemVersion": "10.13",
+        "license": "LICENSE"
+      },
       "windows": {
         "wix": {
-          "language": "ru-RU"
+          "language": "ru-RU",
+          "license": "LICENSE"
+        },
+        "nsis": {
+          "license": "LICENSE"
         }
-      }
+      },
+      "publisher": "Антон тут рядом",
+      "copyright": "Антон тут рядом, CC-BY-ND-4.0, 2024",
+      "category": "Business"
     }
   }
 }
