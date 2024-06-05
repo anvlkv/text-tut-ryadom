@@ -34,14 +34,14 @@ fn main() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
-            input::read_inputs,
-            highlight::read_highlights,
-            highlight::write_highlights,
+            input::read_csv_inputs,
+            highlight::read_csv_highlights,
+            highlight::write_csv_highlights,
             highlight::split_highlight_ranges,
-            output::read_outputs,
-            output::write_output,
+            output::read_csv_outputs,
+            output::write_csv_output,
             task::read_dir_tasks,
-            task::read_file_tasks,
+            task::read_csv_file_tasks,
             task::write_task,
             close_splashscreen
         ])

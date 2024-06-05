@@ -1,11 +1,12 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, fs};
 
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
 use crate::task::Task;
 
-pub const HIGHLIGHT_ENDS: &str = ".highlights.csv";
+pub const HIGHLIGHT_ENDS_CSV: &str = ".highlights.csv";
+pub const HIGHLIGHT_ENDS_JSON: &str = ".highlights.json";
 
 #[derive(Clone, Serialize, Deserialize, TS)]
 pub struct HighlightRecord {
@@ -17,7 +18,7 @@ pub struct HighlightRecord {
 }
 
 #[tauri::command]
-pub fn read_highlights(file: &str) -> Result<Vec<HighlightRecord>, String> {
+pub fn read_csv_highlights(file: &str) -> Result<Vec<HighlightRecord>, String> {
     let mut reader = csv::Reader::from_path(file).map_err(|e| e.to_string())?;
 
     let mut entries: Vec<HighlightRecord> = Vec::new();
@@ -30,8 +31,17 @@ pub fn read_highlights(file: &str) -> Result<Vec<HighlightRecord>, String> {
 }
 
 #[tauri::command]
-pub fn write_highlights(file: &str, highlights: Vec<HighlightRecord>) -> Result<(), String> {
-    let mut entries = read_highlights(file)?;
+pub fn read_json_highlights(file: &str) -> Result<Vec<HighlightRecord>, String> {
+    let data = fs::File::open(file).map_err(|e| e.to_string())?;
+
+    let entries: Vec<HighlightRecord> = serde_json::from_reader(data).map_err(|e| e.to_string())?;
+
+    Ok(entries)
+}
+
+#[tauri::command]
+pub fn write_csv_highlights(file: &str, highlights: Vec<HighlightRecord>) -> Result<(), String> {
+    let mut entries = read_csv_highlights(file)?;
     let ids: HashSet<&str> = HashSet::from_iter(highlights.iter().map(|h| h.text_id.as_str()));
     entries.retain(|e| !ids.contains(e.text_id.as_str()));
     entries.extend(highlights);
