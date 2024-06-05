@@ -64,7 +64,7 @@ dependencies = [
 
 [[package]]
 name = "anton-tut-text"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "csv",

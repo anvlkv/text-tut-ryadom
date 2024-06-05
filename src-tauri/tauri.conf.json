@@ -30,7 +30,7 @@
     "licenseFile": "LICENSE"
   },
   "productName": "Текст тут рядом",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "identifier": "com.anton-tut.text",
   "plugins": {},
   "app": {
