@@ -1,22 +1,22 @@
 <script lang="ts">
-  import "../app.css";
-  import { invoke } from "@tauri-apps/api/tauri";
-  import {
-    readTextFile,
-    writeTextFile,
-    BaseDirectory,
-    exists,
-    createDir,
-  } from "@tauri-apps/api/fs";
-  import { open } from "@tauri-apps/api/dialog";
-  import { onMount, setContext } from "svelte";
+  import { goto } from "$app/navigation";
   import Header from "$lib/header.svelte";
   import type { AppData } from "$lib/types/AppData";
-  import type { Task } from "$lib/types/Task";
-  import { goto } from "$app/navigation";
-  import { writable } from "svelte/store";
   import { ColorSchema } from "$lib/types/Preferences";
+  import type { Task } from "$lib/types/Task";
   import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
+  import { invoke } from "@tauri-apps/api/core";
+  import { open } from "@tauri-apps/plugin-dialog";
+  import {
+      BaseDirectory,
+      create,
+      exists,
+      readTextFile,
+      writeTextFile,
+  } from "@tauri-apps/plugin-fs";
+  import { onMount, setContext } from "svelte";
+  import { writable } from "svelte/store";
+  import "../app.css";
 
   export const WINDOW_SIZE = 100;
   const APP_DATA_FILE = "config/app_data.json";
@@ -35,17 +35,16 @@
     const { src_dir, current_entry, preferences } = $data;
 
     try {
-      if (!(await exists(APP_DATA_FILE, { dir: BaseDirectory.AppData }))) {
-        await createDir("config", {
-          dir: BaseDirectory.AppData,
-          recursive: true,
+      if (!(await exists(APP_DATA_FILE, { baseDir: BaseDirectory.AppData }))) {
+        await create(APP_DATA_FILE, {
+          baseDir: BaseDirectory.AppData,
         });
       }
 
       await writeTextFile(
         APP_DATA_FILE,
         JSON.stringify({ src_dir, current_entry, preferences }),
-        { dir: BaseDirectory.AppData },
+        { baseDir: BaseDirectory.AppData },
       );
 
       console.info("app data stored");
@@ -120,7 +119,7 @@
     console.info("loading");
     try {
       const { src_dir, current_entry, preferences } = JSON.parse(
-        await readTextFile(APP_DATA_FILE, { dir: BaseDirectory.AppData }),
+        await readTextFile(APP_DATA_FILE, { baseDir: BaseDirectory.AppData }),
       );
       $data.current_entry = current_entry;
       $data.src_dir = src_dir;
@@ -194,7 +193,7 @@
 
         document
           .querySelector("html")
-          ?.setAttribute("style", `font-size: ${d.preferences.fontSize}px`);
+          ?.setAttribute("style", `font-size: ${d.preferences.fontSize}px !important;`);
       }
     });
 

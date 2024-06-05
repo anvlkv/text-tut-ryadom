@@ -37,7 +37,7 @@ pub fn write_highlights(file: &str, highlights: Vec<HighlightRecord>) -> Result<
     entries.extend(highlights);
 
     let mut writer = csv::Writer::from_path(file).map_err(|e| e.to_string())?;
-    
+
     for record in entries {
         writer.serialize(record).map_err(|e| e.to_string())?;
     }
@@ -46,7 +46,6 @@ pub fn write_highlights(file: &str, highlights: Vec<HighlightRecord>) -> Result<
 
     Ok(())
 }
-
 
 #[tauri::command]
 pub fn split_highlight_ranges(highlight: (usize, usize), task: Task) -> Vec<(usize, usize)> {

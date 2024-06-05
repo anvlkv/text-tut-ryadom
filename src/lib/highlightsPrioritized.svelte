@@ -1,6 +1,6 @@
 <script lang="ts">
   import Highlight from "./highlight.svelte";
-import { splitHighlights } from "./splitHighlights";
+  import { splitHighlights } from "./splitHighlights";
   import type { Task } from "./types/Task";
 
   export let task: Task;
@@ -12,7 +12,7 @@ import { splitHighlights } from "./splitHighlights";
   {#each lines as line}
     {#if line.group && line.color}
       <p>
-        <Highlight text={line.chars} color={line.color}/>
+        <Highlight text={line.chars} color={line.color} />
       </p>
     {:else}
       <p class="text-sm">{line.chars}</p>

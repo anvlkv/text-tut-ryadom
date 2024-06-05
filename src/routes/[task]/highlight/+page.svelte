@@ -1,12 +1,12 @@
 <script lang="ts">
+  import { highlightColor, textColor } from "$lib/color";
+  import HighlightsArea from "$lib/highlightsArea.svelte";
+  import HighlightsList from "$lib/highlightsList.svelte";
+  import String from "$lib/string.svelte";
+  import type { AppData } from "$lib/types/AppData";
+  import { ColorSchema } from "$lib/types/Preferences";
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
-  import type { AppData } from "$lib/types/AppData";
-  import HighlightsList from "$lib/highlightsList.svelte";
-  import HighlightsArea from "$lib/highlightsArea.svelte";
-  import { highlightColor, textColor } from "$lib/color";
-  import { ColorSchema } from "$lib/types/Preferences";
-  import String from "$lib/string.svelte";
 
   const ctx: Writable<AppData> = getContext("appData");
 
@@ -71,12 +71,22 @@
 >
   <style>
     .highlight-area *::selection {
-      background-color: var(--highlight-color);
-      color: var(--highlight-text-color);
+      background-color: var(--highlight-color) !important;
+      color: var(--highlight-text-color) !important;
     }
   </style>
   {#if task}
-    <h2 class="w-2/3 text-center mb-8 text-gray-500 font-semibold text-lg">
+    <h2 class="w-2/3 text-center mb-8 
+    text-gray-500 
+    dull:text-gray-800
+    dc:text-white 
+    lc:text-black
+    dark:text-gray-300
+    earth:text-emerald-600
+    yellow:text-yellow-600
+    green:text-green-600
+    warm:text-rose-600
+    cold:text-blue-600 font-semibold text-lg">
       <String>
         <svelte:fragment slot="familiar">
           Прочитай текст и выдели его смысловые части:
@@ -86,21 +96,19 @@
         </svelte:fragment>
       </String>
     </h2>
-    <div class="overflow-y-auto overflow-x-visible sticky h-full">
-      <div class="flex my-auto">
-        <HighlightsArea
-          __class="highlight-area basis-2/3"
-          {task}
-          on:highlightAdded={addHighlight}
-          on:highlightRemoved={removeHighlight}
-        />
-        <HighlightsList
-          __class="basis-72"
-          {task}
-          activeGroup={highlightGroup}
-          on:selectGroup={onSelectGroup}
-        />
-      </div>
+    <div class="flex relative my-auto">
+      <HighlightsArea
+        __class="highlight-area basis-2/3"
+        {task}
+        on:highlightAdded={addHighlight}
+        on:highlightRemoved={removeHighlight}
+      />
+      <HighlightsList
+        __class="basis-72"
+        {task}
+        activeGroup={highlightGroup}
+        on:selectGroup={onSelectGroup}
+      />
     </div>
   {/if}
 </div>

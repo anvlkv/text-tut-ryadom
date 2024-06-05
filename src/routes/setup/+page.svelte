@@ -1,14 +1,13 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
+  import Button from "$lib/button.svelte";
   import Highlight from "$lib/highlight.svelte";
   import String from "$lib/string.svelte";
   import type { AppData } from "$lib/types/AppData";
   import { ColorSchema, ToneOfVoice } from "$lib/types/Preferences";
+  import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
   import { getContext, onMount } from "svelte";
   import type { ChangeEventHandler } from "svelte/elements";
   import type { Writable } from "svelte/store";
-  import Button from "$lib/button.svelte";
 
   const ctx: Writable<AppData> = getContext("appData");
   const storeAppData: () => Promise<void> = getContext("storeAppData");
@@ -38,11 +37,10 @@
 
   function applySetup(e: Event) {
     e.preventDefault();
-    storeAppData()
-      .then(() => {
-        console.log("settings done");
-        window.location.href = "/";
-      });
+    storeAppData().then(() => {
+      console.log("settings done");
+      window.location.href = "/";
+    });
   }
 
   function resetSetup(e: Event) {
@@ -463,9 +461,9 @@
     </h4>
     <label class="overflow-hidden w-full">
       <div class="flex w-full justify-between items-baseline">
-        <span class="block" style="font-size: 12px;">Aa</span>
-        <span class="block" style="font-size: 27px;">Aa</span>
-        <span class="block" style="font-size: 42px;">Aa</span>
+        <span class="block" style="font-size: 12px !important;">Aa</span>
+        <span class="block" style="font-size: 27px !important;">Aa</span>
+        <span class="block" style="font-size: 42px !important;">Aa</span>
       </div>
       <style>
         input[type="range"]::-webkit-slider-thumb,
@@ -475,7 +473,7 @@
         }
       </style>
       <input
-        class="w-full appearance-none h-2 rounded-full bg-gray-700 dark:bg-gray-300 dc:bg-white lc:bg-black dull:bg-gray-500 warm:bg-red-800 cold:bg-blue-800 green:bg-green-800 yellow:bg-yellow-800 earth:bg-emerald-800"
+        class="w-full appearance-none h-2 my-2 rounded-full bg-gray-700 dark:bg-gray-300 dc:bg-white lc:bg-black dull:bg-gray-500 warm:bg-red-800 cold:bg-blue-800 green:bg-green-800 yellow:bg-yellow-800 earth:bg-emerald-800"
         name="font-size"
         value={fontSize}
         on:change={fontChange}

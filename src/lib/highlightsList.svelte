@@ -1,11 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher, getContext } from "svelte";
-  import type { Task } from "./types/Task";
-  import { highlightColor } from "./color";
   import type { Writable } from "svelte/store";
+  import { highlightColor } from "./color";
+  import String from "./string.svelte";
   import type { AppData } from "./types/AppData";
   import { ColorSchema } from "./types/Preferences";
-  import String from "./string.svelte";
+  import type { Task } from "./types/Task";
 
   export let task: Task;
   export let activeGroup: null | string;
@@ -13,7 +13,7 @@
 
   const dispatch = createEventDispatcher();
 
-  const ctx: Writable<AppData> = getContext('appData');
+  const ctx: Writable<AppData> = getContext("appData");
 
   $: schema = $ctx.activeSchema || ColorSchema.Dull;
 
@@ -33,13 +33,13 @@
 
       return acc;
     },
-    [] as { label: string; count: number; color: number; id: string }[]
+    [] as { label: string; count: number; color: number; id: string }[],
   );
 </script>
 
 <div class="{__class} max-h-full">
   <ul
-    class="mt-8 w-72 flex flex-col justify-center items-stretch px-6 border-l border-solid border-gray-400/50 dc:border-white lc:border-black"
+    class="mt-auto w-72 flex flex-col justify-center items-stretch px-6 border-l border-solid border-gray-400/50 dc:border-white lc:border-black"
   >
     {#if groups.length > 0}
       <li class="mt-auto"></li>
@@ -73,9 +73,7 @@
           <svelte:fragment slot="familiar">
             Начни выделять текст, список фрагментов появится здесь
           </svelte:fragment>
-          <svelte:fragment>
-            Еще ничего не выделено
-          </svelte:fragment>
+          <svelte:fragment>Еще ничего не выделено</svelte:fragment>
         </String>
       </li>
     {/each}

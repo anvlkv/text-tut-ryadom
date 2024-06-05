@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
-  import type { AppData } from "./types/AppData";
   import { page } from "$app/stores";
-  import Task from "./task.svelte";
+  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
+  import Task from "./task.svelte";
+  import type { AppData } from "./types/AppData";
 
   const ctx: Writable<AppData> = getContext("appData");
   const taskHeight = 5;

@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import type { Writable } from "svelte/store";
-  import type { AppData } from "$lib/types/AppData";
-  import { getContext } from "svelte";
-  import { invoke } from "@tauri-apps/api";
   import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+  import type { AppData } from "$lib/types/AppData";
   import { type Task } from "$lib/types/Task";
-    import Button from "./button.svelte";
+  import { invoke } from "@tauri-apps/api/core";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
+  import Button from "./button.svelte";
 
   const ctx: Writable<AppData> = getContext("appData");
   const POSTPONE_DURATION = 5 * 60 * 1000;
@@ -48,7 +48,7 @@
     } else {
       await writeTask(new Date());
       const taskIndex = $ctx.entries!.findIndex(
-        (e) => e.input.id === $ctx.current_entry
+        (e) => e.input.id === $ctx.current_entry,
       );
       const nextTask = $ctx.entries![taskIndex + 1];
       if (nextTask) {
@@ -76,7 +76,7 @@
   async function postpone() {
     await writeTask();
     const taskIndex = $ctx.entries!.findIndex(
-      (e) => e.input.id === $ctx.current_entry
+      (e) => e.input.id === $ctx.current_entry,
     );
     const nextTask = $ctx.entries![taskIndex + 1];
 
@@ -108,11 +108,7 @@
     Отложить
   </Button>
   {#if nextBtn}
-    <Button
-      on:click={next}
-      disabled={!nextBtnEnabled}
-      cta={true}
-    >
+    <Button on:click={next} disabled={!nextBtnEnabled} cta={true}>
       {nextBtn}
     </Button>
   {/if}

@@ -1,17 +1,17 @@
+import { ColorSchema } from "./types/Preferences";
 import {
-  LIGHT_MILD_COLORS,
-  DARK_MILD_COLORS,
-  DULL_COLORS,
-  YELLOW_COLORS,
   COLD_COLORS,
   DARK_CONTRAST_COLORS,
+  DARK_MILD_COLORS,
+  DULL_COLORS,
   EARTH_COLORS,
   GREEN_COLORS,
   LIGHT_CONTRAST_COLORS,
-  WARM_COLORS,
+  LIGHT_MILD_COLORS,
   PAIRINGS,
+  WARM_COLORS,
+  YELLOW_COLORS,
 } from "./values";
-import { ColorSchema } from "./types/Preferences";
 
 export function highlightColor(schema: ColorSchema, color: number): string {
   switch (schema) {

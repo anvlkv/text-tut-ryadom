@@ -10,10 +10,17 @@ mod task;
 
 #[tauri::command]
 async fn close_splashscreen(window: Window) {
-  // Close splashscreen
-  window.get_window("splashscreen").and_then(|w| w.close().ok()).unwrap_or_default();
-  // Show main window
-  window.get_window("main").expect("no window labeled 'main' found").show().unwrap();
+    // Close splashscreen
+    window
+        .get_webview_window("splashscreen")
+        .and_then(|w| w.close().ok())
+        .unwrap_or_default();
+    // Show main window
+    window
+        .get_webview_window("main")
+        .expect("no window labeled 'main' found")
+        .show()
+        .unwrap();
 }
 
 fn main() {
@@ -23,6 +30,9 @@ fn main() {
     }
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             input::read_inputs,
             highlight::read_highlights,

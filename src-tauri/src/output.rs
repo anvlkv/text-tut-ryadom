@@ -7,7 +7,7 @@ pub const OUTPUT_ENDS: &str = ".output.csv";
 pub struct OutputRecord {
     pub text_id: String,
     pub text: String,
-    pub completed_ts: Option<chrono::DateTime<chrono::Utc>>
+    pub completed_ts: Option<chrono::DateTime<chrono::Utc>>,
 }
 
 #[tauri::command]

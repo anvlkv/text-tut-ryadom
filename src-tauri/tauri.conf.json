@@ -2,32 +2,40 @@
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../build"
+    "frontendDist": "../build",
+    "devUrl": "http://localhost:1420"
   },
-  "package": {
-    "productName": "Текст тут рядом",
-    "version": "0.1.1"
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Business",
+    "icon": [
+      "icons/32.png",
+      "icons/32@2x.png",
+      "icons/128.png",
+      "icons/128@2x.png",
+      "icons/icon.ico"
+    ],
+    "macOS": {
+      "minimumSystemVersion": "10.13"
+    },
+    "windows": {
+      "wix": {
+        "language": "ru-RU"
+      },
+      "nsis": {}
+    },
+    "publisher": "Антон тут рядом",
+    "copyright": "Антон тут рядом, CC-BY-ND-4.0, 2024",
+    "licenseFile": "LICENSE"
   },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "dialog": {
-        "open": true,
-        "save": true
-      },
-      "fs": {
-        "scope": ["$APPDATA/**/*"],
-        "readFile": true,
-        "readDir": true,
-        "writeFile": true,
-        "exists": true,
-        "createDir": true
-      }
+  "productName": "Текст тут рядом",
+  "version": "0.1.1",
+  "identifier": "com.anton-tut.text",
+  "plugins": {},
+  "app": {
+    "security": {
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost ipc: http://ipc.localhost"
     },
     "windows": [
       {
@@ -44,38 +52,6 @@
         "url": "splashscreen.html",
         "label": "splashscreen"
       }
-    ],
-    "security": {
-      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost"
-    },
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "com.anton-tut.text",
-      "icon": [
-        "icons/32.png",
-        "icons/32@2x.png",
-        "icons/128.png",
-        "icons/128@2x.png",
-        "icons/icon.ico"
-      ],
-      
-      "macOS": {
-        "minimumSystemVersion": "10.13",
-        "license": "LICENSE"
-      },
-      "windows": {
-        "wix": {
-          "language": "ru-RU",
-          "license": "LICENSE"
-        },
-        "nsis": {
-          "license": "LICENSE"
-        }
-      },
-      "publisher": "Антон тут рядом",
-      "copyright": "Антон тут рядом, CC-BY-ND-4.0, 2024",
-      "category": "Business"
-    }
+    ]
   }
 }

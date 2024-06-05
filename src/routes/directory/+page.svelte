@@ -1,9 +1,9 @@
 <script lang="ts">
+  import Button from "$lib/button.svelte";
+  import String from "$lib/string.svelte";
   import type { AppData } from "$lib/types/AppData";
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
-  import String from "$lib/string.svelte";
-    import Button from "$lib/button.svelte";
 
 
   const ctx: Writable<AppData> = getContext('appData');

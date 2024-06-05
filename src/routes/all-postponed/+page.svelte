@@ -1,9 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import String from "$lib/string.svelte";
   import type { AppData } from "$lib/types/AppData";
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
-  import String from "$lib/string.svelte";
 
   const ctx: Writable<AppData> = getContext("appData");
 

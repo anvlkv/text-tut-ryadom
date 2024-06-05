@@ -15,7 +15,7 @@ pub struct Task {
     pub output: Option<OutputRecord>,
     pub highlights: Vec<HighlightRecord>,
     pub origin: String,
-    pub postponed: Option<chrono::DateTime<chrono::Utc>>
+    pub postponed: Option<chrono::DateTime<chrono::Utc>>,
 }
 
 #[tauri::command]
@@ -48,7 +48,7 @@ pub fn read_file_tasks(path: &str) -> Result<Vec<Task>, String> {
                 output,
                 highlights,
                 origin: path.to_string(),
-                postponed: None
+                postponed: None,
             }
         })
         .collect())

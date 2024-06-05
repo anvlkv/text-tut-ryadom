@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { ToneOfVoice } from "./types/Preferences";
   import type { Writable } from "svelte/store";
   import type { AppData } from "./types/AppData";
+  import { ToneOfVoice } from "./types/Preferences";
 
   const ctx: Writable<AppData> = getContext("appData");
   let tone: ToneOfVoice = ToneOfVoice.Polite;

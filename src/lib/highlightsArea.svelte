@@ -1,9 +1,9 @@
 <script lang="ts">
+  import { invoke } from "@tauri-apps/api/core";
   import { createEventDispatcher } from "svelte";
-  import type { Task } from "./types/Task";
   import Highlight from "./highlight.svelte";
-  import { invoke } from "@tauri-apps/api";
   import { splitHighlights } from "./splitHighlights";
+  import type { Task } from "./types/Task";
 
   export let task: Task;
   export let __class: string = "";
@@ -33,15 +33,15 @@
             (reverse
               ? selection.focusNode
               : selection.anchorNode)!.parentElement!.getAttribute(
-              "data-offset"
-            )!
+              "data-offset",
+            )!,
           );
           const offsetEnd = parseInt(
             (reverse
               ? selection.anchorNode
               : selection.focusNode)!.parentElement!.getAttribute(
-              "data-offset"
-            )!
+              "data-offset",
+            )!,
           );
 
           const len =
@@ -70,14 +70,14 @@
               highlight: [start, end],
               task,
             }).then((d) => {
-              console.log('add multiple');
+              console.log("add multiple");
               dispatch(
                 "highlightAdded",
-                d.map(([start, end]) => ({ start, end }))
+                d.map(([start, end]) => ({ start, end })),
               );
             });
           } else {
-            console.log('add one');
+            console.log("add one");
             dispatch("highlightAdded", [{ start, end }]);
           }
 
@@ -93,9 +93,7 @@
   bind:this={container}
   on:pointerdown={onPointerDown}
 >
-  {#each lines as line}
-    {#if line.group && line.color}
-      <Highlight
+  {#each lines as line}{#if line.group && line.color}<Highlight
         text={line.chars}
         color={line.color}
         onRemove={() =>
@@ -103,11 +101,9 @@
             group: line.group,
             start: line.offset,
           })}
-      />
-    {:else}
-      <span class="select-text" data-offset={line.offset}>{line.chars}</span>
-    {/if}
-  {/each}
+      />{:else}<span class="select-text" data-offset={line.offset}
+        >{line.chars}</span
+  >{/if}{/each}
 </p>
 
 <svelte:document on:pointerup={onPointerUp} />
