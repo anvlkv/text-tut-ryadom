@@ -22,8 +22,7 @@
     "windows": {
       "wix": {
         "language": "ru-RU"
-      },
-      "nsis": {}
+      }
     },
     "publisher": "Антон тут рядом",
     "copyright": "Антон тут рядом, CC-BY-ND-4.0, 2024",
