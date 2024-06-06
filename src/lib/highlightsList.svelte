@@ -5,6 +5,7 @@
   import String from "./string.svelte";
   import type { AppData } from "./types/AppData";
   import { ColorSchema } from "./types/Preferences";
+  import type { ScrollSync } from "./types/ScrollSync";
   import type { Task } from "./types/Task";
 
   export let task: Task;
@@ -14,8 +15,7 @@
   const dispatch = createEventDispatcher();
 
   const ctx: Writable<AppData> = getContext("appData");
-  const taskScroll: Writable<{ scrollTop: number; height: number }> =
-    getContext("taskScroll");
+  const scrollSync: Writable<ScrollSync> = getContext("scrollSync");
 
   let listElement: HTMLUListElement;
   let listHeight = 0;
@@ -44,10 +44,12 @@
     [] as { label: string; count: number; color: number; id: string }[],
   );
 
-  $: listOffset =
-    $taskScroll.height > listHeight
-      ? $taskScroll.scrollTop
-      : $taskScroll.scrollTop - $taskScroll.scrollTop * ($taskScroll.height / listHeight);
+  $: listOffset = $scrollSync.allowFixed
+    ? $scrollSync.height > listHeight
+      ? $scrollSync.scrollTop
+      : $scrollSync.scrollTop -
+        $scrollSync.scrollTop * ($scrollSync.height / listHeight)
+    : 0;
 
   onMount(() => {
     resize.observe(listElement);

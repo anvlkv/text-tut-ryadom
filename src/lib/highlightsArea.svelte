@@ -1,9 +1,11 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/core";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext, onMount } from "svelte";
   import Highlight from "./highlight.svelte";
   import { splitHighlights } from "./splitHighlights";
   import type { Task } from "./types/Task";
+    import type { Writable } from "svelte/store";
+    import type { ScrollSync } from "./types/ScrollSync";
 
   export let task: Task;
   export let __class: string = "";
@@ -11,8 +13,17 @@
   const dispatch = createEventDispatcher();
 
   let container: HTMLParagraphElement;
+  let scrollSync: Writable<ScrollSync> = getContext("scrollSync");
 
   $: lines = splitHighlights(task);
+
+  const resize = new ResizeObserver((e) => {
+    const height = e[0].contentRect.height;
+    scrollSync.update(d => {
+      d.allowFixed = height > d.height;
+      return d;
+    })
+  })
 
   let startSelection = false;
   function onPointerDown(e: any) {
@@ -86,6 +97,14 @@
       }
     }
   }
+
+  onMount(() => {
+    resize.observe(container);
+
+    return () => {
+      resize.disconnect();
+    }
+  })
 </script>
 
 <p

@@ -3,12 +3,13 @@
   import TaskFooter from "$lib/taskFooter.svelte";
   import TaskList from "$lib/taskList.svelte";
   import type { AppData } from "$lib/types/AppData";
+  import type { ScrollSync } from "$lib/types/ScrollSync";
   import { getContext, onMount, setContext } from "svelte";
   import type { UIEventHandler } from "svelte/elements";
   import { writable, type Writable } from "svelte/store";
 
   const ctx: Writable<AppData> = getContext("appData");
-  const scrollCtx: Writable<{scrollTop: number, height: number}> = setContext("taskScroll", writable({scrollTop: 0, height: 200}));
+  const scrollCtx: Writable<ScrollSync> = setContext("scrollSync", writable({scrollTop: 0, height: 200, allowFixed: true}));
   const storeAppData: () => Promise<void> = getContext("storeAppData");
 
   $: {
