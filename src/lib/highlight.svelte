@@ -8,6 +8,13 @@
   export let text: string;
   export let color: number;
   export let onRemove: undefined | (() => void) = undefined;
+  export let onClick: undefined | (() => void) = undefined;
+
+  if (onClick && onRemove) {
+    throw new Error(
+      "Only one at a time supported onClick or onRemove for highlight",
+    );
+  }
 
   const ctx: Writable<AppData> = getContext("appData");
 
@@ -15,18 +22,24 @@
 
   $: colorValue = highlightColor(schema, color);
   $: textColorValue = textColor(schema, color);
+  $: style = `background-color: ${colorValue}; color: ${textColorValue};`;
 </script>
 
-<div class="inline relative">
-  <span
-    style="background-color: {colorValue}; color: {textColorValue};"
-    class="rounded-sm py-px">{text}</span
-  >{#if onRemove}<button
-      style="background-color: {colorValue}; color: {textColorValue};"
-      class="text-base font-thin rounded-t-sm leading-none absolute h-3 px-2 -ml-6 -mt-1"
-      title="Удалить выделение"
-      on:click={onRemove}
-    >
-      ×
-    </button>{/if}
+<div class="contents">
+  {#if onClick}
+    <button class="inline relative text-left" on:click={onClick}>
+      <span {style} class="rounded-sm py-px">{text}</span>
+    </button>
+  {:else}
+    <div class="inline relative">
+      <span {style} class="rounded-sm py-px">{text}</span>{#if onRemove}<button
+          {style}
+          class="text-base font-thin rounded-t-sm leading-none absolute h-3 px-2 -ml-6 -mt-1"
+          title="Удалить выделение"
+          on:click={onRemove}
+        >
+          ×
+        </button>{/if}
+    </div>
+  {/if}
 </div>

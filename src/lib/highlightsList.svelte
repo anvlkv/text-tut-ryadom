@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, getContext } from "svelte";
+  import { createEventDispatcher, getContext, onMount } from "svelte";
   import type { Writable } from "svelte/store";
   import { highlightColor } from "./color";
   import String from "./string.svelte";
@@ -14,6 +14,14 @@
   const dispatch = createEventDispatcher();
 
   const ctx: Writable<AppData> = getContext("appData");
+  const taskScroll: Writable<{ scrollTop: number; height: number }> =
+    getContext("taskScroll");
+
+  let listElement: HTMLUListElement;
+  let listHeight = 0;
+  const resize = new ResizeObserver((e) => {
+    listHeight = e[0].contentRect.height;
+  });
 
   $: schema = $ctx.activeSchema || ColorSchema.Dull;
 
@@ -35,10 +43,25 @@
     },
     [] as { label: string; count: number; color: number; id: string }[],
   );
+
+  $: listOffset =
+    $taskScroll.height > listHeight
+      ? $taskScroll.scrollTop
+      : $taskScroll.scrollTop - $taskScroll.scrollTop * ($taskScroll.height / listHeight);
+
+  onMount(() => {
+    resize.observe(listElement);
+
+    return () => {
+      resize.disconnect();
+    };
+  });
 </script>
 
 <div class="{__class} max-h-full">
   <ul
+    bind:this={listElement}
+    style="padding-top: {listOffset}px;"
     class="mt-auto w-72 flex flex-col justify-center items-stretch px-6 border-l border-solid border-gray-400/50 dc:border-white lc:border-black"
   >
     {#if groups.length > 0}
