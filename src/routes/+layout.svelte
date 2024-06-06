@@ -1,22 +1,28 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import Header from "$lib/header.svelte";
-  import type { AppData } from "$lib/types/AppData";
+  import type {
+    AppData,
+    LabelStudioSource,
+    LocalSource,
+  } from "$lib/types/AppData";
   import { ColorSchema } from "$lib/types/Preferences";
   import type { Task } from "$lib/types/Task";
   import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
   import { invoke } from "@tauri-apps/api/core";
   import { open } from "@tauri-apps/plugin-dialog";
   import {
-      BaseDirectory,
-      create,
-      exists,
-      readTextFile,
-      writeTextFile,
+    BaseDirectory,
+    create,
+    exists,
+    readTextFile,
+    writeTextFile,
   } from "@tauri-apps/plugin-fs";
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import "../app.css";
+  import { fetch } from "@tauri-apps/plugin-http";
+  import { labelStudioGet } from "$lib/label_studio";
 
   export const WINDOW_SIZE = 100;
   const APP_DATA_FILE = "config/app_data.json";
@@ -24,6 +30,7 @@
   const data = setContext("appData", writable({} as AppData));
   setContext("storeAppData", storeAppData);
   setContext("loadDir", loadDir);
+  setContext("loadLabelStudio", loadLabelStudio);
   setContext("prerequisites", prerequisites);
 
   let theme = ColorSchema.Dull;
@@ -32,7 +39,7 @@
   $: $data.activeSchema = theme;
 
   async function storeAppData() {
-    const { src_dir, current_entry, preferences } = $data;
+    const { src, current_entry, preferences } = $data;
 
     try {
       if (!(await exists(APP_DATA_FILE, { baseDir: BaseDirectory.AppData }))) {
@@ -43,7 +50,7 @@
 
       await writeTextFile(
         APP_DATA_FILE,
-        JSON.stringify({ src_dir, current_entry, preferences }),
+        JSON.stringify({ src, current_entry, preferences }),
         { baseDir: BaseDirectory.AppData },
       );
 
@@ -53,12 +60,51 @@
     }
   }
 
+  async function loadLabelStudio() {
+    const config = $data.src! as LabelStudioSource;
+    if (config.project) {
+      const tasks_data = await labelStudioGet<{id: number, data: {text: string}, annotations: {result: {value: {text: string[]}}, updated_at: string}[]}[]>(
+        `projects/${config.project}/tasks${config.page ? `?page=${config.page[0]}&page_size=${config.page[1]}` : ""}`,
+        config,
+      );
+      const tasks: Task[] = tasks_data.map(d => ({
+        input: {
+          id: d.id.toString(),
+          text: d.data.text,
+        },
+        output: d.annotations[0] && {
+          text: d.annotations[0].result.value.text[0],
+          text_id: d.id.toString(),
+          completed_ts: d.annotations[0].updated_at
+        },
+        highlights: [],
+        origin: config.label_studio_url,
+        postponed: null,
+      }));
+      
+      $data.entries = tasks;
+      $data.total_entries = tasks.length;
+
+      const entryIndex = $data.current_entry
+        ? $data.entries.findIndex((e) => e.input.id === $data.current_entry)
+        : $data.entries.findIndex((e) => !e.output);
+      $data.current_entry = $data.entries[entryIndex]?.input.id;
+      const windowStart = Math.max(entryIndex - WINDOW_SIZE / 2, 0);
+      $data.entries_window = [windowStart, windowStart + WINDOW_SIZE];
+
+      await openProjectPage();
+    } else {
+      const projects = await labelStudioGet("projects", config);
+      return projects;
+    }
+  }
+
   async function loadDir() {
     console.info("loading dir");
 
     let dir;
 
-    if (!$data.src_dir) {
+    if (!$data.src) {
       dir = (await open({
         title: "Выбери папку с проектом",
         directory: true,
@@ -66,11 +112,13 @@
         $data.loading = true;
         return d;
       })!) as string;
+    } else if (Object.hasOwn($data.src, "src_dir")) {
+      dir = ($data.src as LocalSource).src_dir;
     } else {
-      dir = $data.src_dir;
+      throw new Error("expected local source");
     }
 
-    $data.src_dir = dir;
+    $data.src = { src_dir: dir };
 
     try {
       const tasks: Task[] = await invoke("read_dir_tasks", { dir });
@@ -86,7 +134,7 @@
 
       await openProjectPage();
     } catch {
-      $data.src_dir = undefined;
+      $data.src = undefined;
       console.warn("loading dir failed. try again");
     }
     $data.loading = false;
@@ -106,10 +154,14 @@
     console.log($data);
     if (!$data.preferences) {
       await goto("/setup");
-    } else if (!$data.src_dir) {
+    } else if (!$data.src) {
       await goto("/directory");
     } else if (!$data.entries) {
-      await loadDir();
+      if (Object.hasOwn($data.src, "src_dir")) {
+        await loadDir();
+      } else if (Object.hasOwn($data.src, "label_studio_url")) {
+        await loadLabelStudio();
+      }
     } else {
       await openProjectPage();
     }
@@ -118,15 +170,15 @@
   async function load() {
     console.info("loading");
     try {
-      const { src_dir, current_entry, preferences } = JSON.parse(
+      const { src, current_entry, preferences } = JSON.parse(
         await readTextFile(APP_DATA_FILE, { baseDir: BaseDirectory.AppData }),
       );
       $data.current_entry = current_entry;
-      $data.src_dir = src_dir;
+      $data.src = src;
       $data.preferences = preferences;
       console.info("loaded from config");
     } catch {
-      $data.src_dir = undefined;
+      $data.src = undefined;
       $data.current_entry = undefined;
       $data.total_entries = undefined;
       $data.entries_window = undefined;
@@ -193,7 +245,10 @@
 
         document
           .querySelector("html")
-          ?.setAttribute("style", `font-size: ${d.preferences.fontSize}px !important;`);
+          ?.setAttribute(
+            "style",
+            `font-size: ${d.preferences.fontSize}px !important;`,
+          );
       }
     });
 

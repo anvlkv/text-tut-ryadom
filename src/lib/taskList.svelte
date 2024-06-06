@@ -57,7 +57,9 @@
       />
     </div>
     <div slot="footer">
-      <InfiniteLoading on:infinite={infiniteHandler} />
+      {#if $ctx.total_entries && $ctx.entries && $ctx.total_entries > $ctx.entries.length}
+        <InfiniteLoading on:infinite={infiniteHandler} />
+      {/if}
     </div>
   </VirtualList>
 </aside>

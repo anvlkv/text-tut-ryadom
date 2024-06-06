@@ -4,7 +4,11 @@
   import { portal } from "svelte-portal";
   import type { Writable } from "svelte/store";
   import String from "./string.svelte";
-  import type { AppData } from "./types/AppData";
+  import type {
+    AppData,
+    LabelStudioSource,
+    LocalSource,
+  } from "./types/AppData";
 
   const ctx: Writable<AppData> = getContext("appData");
 
@@ -18,7 +22,11 @@
   let pos = [0, 0];
   let menuButton: HTMLButtonElement;
 
-  $: dir = $ctx.src_dir;
+  $: dir =
+    $ctx.src &&
+    (Object.hasOwn($ctx.src || {}, "src_dir")
+      ? ($ctx.src as LocalSource).src_dir
+      : ($ctx.src as LabelStudioSource).label_studio_url);
 
   function showMenu(e: MouseEvent) {
     e.stopPropagation();
@@ -95,7 +103,7 @@
     hidden
   >
     <ul
-      class="bg-gray-50 dark:bg-gray-900 dc:bg-stone-950 lc:bg-stone-50 yellow:bg-yellow-50 green:bg-green-50 warm:bg-red-50 cold:bg-blue-50 earth:bg-earth-50 border-gray-400/50 dc:border-white lc:border-black shadow rounded "
+      class="bg-gray-50 dark:bg-gray-900 dc:bg-stone-950 lc:bg-stone-50 yellow:bg-yellow-50 green:bg-green-50 warm:bg-red-50 cold:bg-blue-50 earth:bg-earth-50 border-gray-400/50 dc:border-white lc:border-black shadow rounded"
     >
       <li class="border-b border-gray-400/50 dc:border-white lc:border-black">
         <a class="p-4 w-full flex flex-col" href="/directory">

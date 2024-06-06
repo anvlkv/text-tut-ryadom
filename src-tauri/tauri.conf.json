@@ -34,7 +34,11 @@
   "productName": "Текст тут рядом",
   "version": "0.1.2",
   "identifier": "com.anton-tut.text",
-  "plugins": {},
+  "plugins": {
+    "http": {
+      "scope": ["http://*", "https://*"]
+    }
+  },
   "app": {
     "security": {
       "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost ipc: http://ipc.localhost"
