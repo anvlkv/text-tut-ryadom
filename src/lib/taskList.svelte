@@ -41,7 +41,17 @@
   bind:this={asideElement}
   class="basis-1/5 shrink-0 grow-0 text-sm border-r border-solid border-gray-400/50 dc:border-white lc:border-black overflow-x-hidden h-full"
 >
-  <VirtualList
+  <ul>
+    {#each ($ctx.entries || []) as entry}
+      <li>
+          <Task
+          task={entry}
+          isCurrent={$ctx.current_entry === entry.input.id}
+        />
+      </li>
+    {/each}
+  </ul>
+  <!-- <VirtualList
     height={asideHeight}
     itemCount={$ctx.total_entries || 0}
     itemSize={taskHeight * ($ctx.preferences?.fontSize || 16)}
@@ -59,5 +69,5 @@
     <div slot="footer">
       <InfiniteLoading on:infinite={infiniteHandler} />
     </div>
-  </VirtualList>
+  </VirtualList> -->
 </aside>

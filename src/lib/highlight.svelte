@@ -22,7 +22,7 @@
 
   $: colorValue = highlightColor(schema, color);
   $: textColorValue = textColor(schema, color);
-  $: style = `background-color: ${colorValue}; color: ${textColorValue};`;
+  $: style = `background-color: ${colorValue} !important; color: ${textColorValue} !important;`;
 </script>
 
 <div class="contents">
