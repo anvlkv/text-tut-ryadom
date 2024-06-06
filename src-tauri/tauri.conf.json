@@ -22,9 +22,6 @@
     "windows": {
       "wix": {
         "language": "ru-RU"
-      },
-      "webviewInstallMode": {
-        "type": "offlineInstaller"
       }
     },
     "publisher": "Антон тут рядом",
