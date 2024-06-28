@@ -1,7 +1,7 @@
 #[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
 pub struct AppConfig {
     pub theme: Option<Theme>,
-    pub font_size: Option<f32>,
+    pub font_size: Option<f64>,
     pub approach: Option<Approach>,
 }
 
@@ -14,4 +14,5 @@ pub enum Theme {
 #[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
 pub enum Approach {
     Polite,
+    Familiar,
 }

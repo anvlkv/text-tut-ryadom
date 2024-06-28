@@ -1,3 +1,4 @@
+mod guide;
 mod home;
 mod project;
 mod routes;
@@ -8,7 +9,7 @@ use freya::prelude::*;
 use crate::{
     resource::{get_stored_state, store_state},
     state::{AppState, StateCtx},
-    FIRA_SANS_REGULAR,
+    use_font, FIRA_SANS_REGULAR,
 };
 
 pub fn app() -> Element {
@@ -36,9 +37,12 @@ pub fn app() -> Element {
 
     provide_context(StateCtx(state, store_state));
 
+    let font = use_font();
+
     rsx!(
         rect{
-            font_family: FIRA_SANS_REGULAR.0,
+            font_family: font().font_family,
+            font_size: font().font_size.to_string(),
             routes::AppRouter {}
         }
     )

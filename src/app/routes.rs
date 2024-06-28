@@ -3,7 +3,7 @@
 use dioxus_router::prelude::{Routable, Router};
 use freya::prelude::*;
 
-use super::{home::*, project::*, setup::*};
+use super::{guide::*, home::*, project::*, setup::*};
 
 #[derive(Routable, Clone, PartialEq)]
 #[rustfmt::skip]
@@ -24,6 +24,16 @@ pub enum AppRoute {
                 #[route("/local")]
                 LocalSrcSetup { },
             #[end_nest]
+        #[end_layout]
+    #[end_nest]
+    #[nest("/guide")]
+        #[layout(Guide)]
+            #[route("/project")]
+            ProjectGuide { },
+            #[route("/select")]
+            EntrySelectGuide { },
+            #[route("/summarize")]
+            EntrySummarizeGuide { },
         #[end_layout]
     #[end_nest]
     #[nest("/project")]

@@ -1,3 +1,65 @@
 _version: 1
 
 title: Текст тут рядом
+util:
+  done:
+    polite: Готово
+    familiar: Всё готово!
+  next:
+    polite: Далее
+    familiar: Продолжить
+  cancel:
+    polite: Отмена
+    familiar: Отменить
+  back:
+    polite: Назад
+    familiar: Вернуться
+setup:
+  configure:
+    polite: Настройки рабочего места
+    familiar: Настрой это рабочее место для себя
+  approach_setup:
+    polite: Выберите обращение
+    familiar: Как к тебе обращаться?
+    label_polite: Сухо, сдержанно, на
+    option_polite: Вы
+    label_familiar: Дружелюбно, развернуто, на
+    option_familiar: Ты
+  font_size_setup:
+    polite: Выберите размер шрифта
+    familiar: Настрой размер так, чтобы глазам было комфортно читать
+  theme_setup:
+    polite: Выберите цветовую схему
+    familiar: Выбери комфортную цветовую схему
+  theme:
+    neutral: Нейтральная
+    soft: Мягкая
+    bright: Яркая
+    contrasting: Контрастная
+    dark: Тёмная
+    light: Светлая
+data:
+  setup:
+    polite: Выбрать источник данных проекта
+    familiar: Подключись к проекту
+  local:
+    polite: Выбрать папку
+    familiar: Выбери папку на этом компьютере
+  local_src: "Проект из папки: %{path}"
+  label_studio:
+    polite: Подключить Label Studio
+    familiar: Подключись к Label Studio
+  label_studio_src: "Проект из Label Studio: %{name} (%{range_1} - %{range_2})"
+  reselect:
+    polite: Выбрать другой проект
+    familiar: Выбери другой проект
+home:
+  project:
+    polite: Открыть проект
+    familiar: Продолжи работу с проектом
+  configure:
+    polite: Настройки рабочего места
+    familiar: Настрой это рабочее место для себя
+  guide:
+    polite: Обучение использованию приложения
+    familiar: Научись пользоваться этим приложением

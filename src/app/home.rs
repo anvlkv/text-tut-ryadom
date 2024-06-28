@@ -1,6 +1,3 @@
-// mod continue;
-// mod setup;
-
 use freya::prelude::*;
 use rust_i18n::t;
 
@@ -14,19 +11,28 @@ pub fn Home() -> Element {
     let StateCtx(state, _) = use_context::<StateCtx>();
 
     rsx!(Body {
-        if state().data_src.is_some() {
-            // Link {
-            //     to: Route::EntrySelect { entry: () },
+        if state().config.is_some() {
+            if state().data_src.is_some() {
+                // Link {
+                //     to: Route::EntrySelect { entry: () },
 
-            // }
-            label {
-                {t!("project")}
+                // }
+                label {
+                    {t!("project")}
+                }
+            }
+
+            Link {
+                to: AppRoute::TextSetup {},
+                label {
+                    {t!("home.guide.polite")}
+                }
             }
         }
         Link {
             to: AppRoute::TextSetup {},
             label {
-                {t!("configure")}
+                {t!("home.configure.polite")}
             }
         }
     })
