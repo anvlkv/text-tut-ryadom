@@ -13,16 +13,16 @@ use super::routes::AppRoute;
 
 #[component]
 pub fn Guide() -> Element {
-    rsx!(Body {
-        label {
-            "Guide"
-        }
+    rsx!(
         rect {
-            main_align: "center",
-            cross_align: "center",
-            width: "100%",
-            height: "90%",
-            Outlet::<AppRoute> {  }
+            label { "Guide" }
+            rect {
+                main_align: "center",
+                cross_align: "center",
+                width: "100%",
+                height: "90%",
+                Outlet::<AppRoute> {}
+            }
         }
-    })
+    )
 }

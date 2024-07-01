@@ -11,16 +11,16 @@ use super::routes::AppRoute;
 
 #[component]
 pub fn Project() -> Element {
-    rsx!(Body {
-        label {
-            "Project"
-        }
+    rsx!(
         rect {
-            main_align: "center",
-            cross_align: "center",
-            width: "100%",
-            height: "90%",
-            Outlet::<AppRoute> {  }
+            label { "Project" }
+            rect {
+                main_align: "center",
+                cross_align: "center",
+                width: "100%",
+                height: "90%",
+                Outlet::<AppRoute> {}
+            }
         }
-    })
+    )
 }

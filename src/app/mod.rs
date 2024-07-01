@@ -1,3 +1,4 @@
+mod data;
 mod guide;
 mod home;
 mod project;
@@ -9,7 +10,7 @@ use freya::prelude::*;
 use crate::{
     resource::{get_stored_state, store_state},
     state::{AppState, StateCtx},
-    use_font, FIRA_SANS_REGULAR,
+    use_app_theme, use_font,
 };
 
 pub fn app() -> Element {
@@ -38,12 +39,27 @@ pub fn app() -> Element {
     provide_context(StateCtx(state, store_state));
 
     let font = use_font();
+    let theme = state.map(|s| {
+        s.config
+            .as_ref()
+            .map(|c| c.theme.as_ref())
+            .flatten()
+            .unwrap_or(&crate::util::Theme::Light)
+    });
 
     rsx!(
-        rect{
-            font_family: font().font_family,
-            font_size: font().font_size.to_string(),
-            routes::AppRouter {}
+        Body { 
+            rect {
+                width: "100%",
+                height: "100%",
+                font_family: font().font_family,
+                font_size: font().font_size.to_string(),
+                main_align: "center",
+                cross_align: "center",
+                background: theme().surface(0).to_string(),
+                color: theme().text().to_string(),
+                routes::AppRouter {}
+            }
         }
     )
 }

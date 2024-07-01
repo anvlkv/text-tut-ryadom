@@ -7,6 +7,7 @@
 extern crate derive_builder;
 
 mod app;
+mod components;
 mod resource;
 mod state;
 mod util;
@@ -21,6 +22,7 @@ i18n!();
 fn main() {
     let level = LevelFilter::Trace;
     if let Some(logs_path) = resource::logs_path() {
+        println!("logging to: {logs_path:?}");
         _ = simple_logging::log_to_file(logs_path, level);
     } else {
         simple_logging::log_to_stderr(level)

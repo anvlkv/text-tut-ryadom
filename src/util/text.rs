@@ -98,6 +98,9 @@ const FALLBACK_SPACING: u8 = 5;
 const WEIGHT_STEP: u16 = 100;
 const SIZE_STEP: f64 = 7.0;
 
+pub const MIN_SIZE: f64 = 12.0;
+pub const MAX_SIZE: f64 = 64.0;
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct TextProps {
     pub font_size: f64,

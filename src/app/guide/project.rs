@@ -2,9 +2,9 @@ use freya::prelude::*;
 
 #[component]
 pub fn ProjectGuide() -> Element {
-    rsx!(Body {
-        label {
-            "ProjectGuide"
+    rsx!(
+        rect {
+            label { "ProjectGuide" }
         }
-    })
+    )
 }
