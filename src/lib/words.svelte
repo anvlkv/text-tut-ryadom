@@ -9,7 +9,7 @@
 
     $: tokens = Array.from(chars.split("")).reduce((acc, ch) => {
         const last = acc[acc.length - 1];
-        const isWord = ch.match(/\w/) !== null;
+        const isWord = (ch.match(/\p{Letter}/u) || ch.match(/\d/)) !== null;
         if (isWord && last?.word) {
             last.tok += ch;
             last.end += 1;
