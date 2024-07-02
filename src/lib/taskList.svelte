@@ -59,6 +59,7 @@
         scrollToIndex={taskIndex}
         scrollToBehaviour="auto"
         scrollToAlignment="center"
+        scrollDirection="vertical"
     >
         <div slot="item" let:index let:style {style} class="task-entry">
             <Task
