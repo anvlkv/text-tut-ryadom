@@ -25,7 +25,7 @@
                 />
             </p>
         {:else}
-            <p class="text-sm">{line.chars}</p>
+            <p class="text-xs">{line.chars}</p>
         {/if}
     {/each}
 </div>
