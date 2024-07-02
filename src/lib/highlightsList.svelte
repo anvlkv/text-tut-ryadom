@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher, getContext, onMount } from "svelte";
     import type { Writable } from "svelte/store";
-    import { highlightColor } from "./color";
+    import { highlightColor, textColor } from "./color";
     import String from "./string.svelte";
     import type { AppData } from "./types/AppData";
     import { ColorSchema } from "./types/Preferences";
@@ -97,7 +97,10 @@
                     on:click={() =>
                         dispatch("selectGroup", { group: group.id })}
                 >
-                    <span class="block text-sm leading-none">
+                    <span
+                        class="block text-sm leading-none"
+                        style="color: {textColor(schema, group.color)}"
+                    >
                         {#if group.count > 1}
                             +{group.count - 1}
                         {:else}
