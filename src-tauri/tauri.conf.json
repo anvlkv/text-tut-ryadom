@@ -30,7 +30,7 @@
   },
   "productName": "Текст тут рядом",
   "version": "0.2.0",
-  "identifier": "com.anton-tut.text",
+  "identifier": "com.anton.text-tut-ryadom",
   "plugins": {},
   "app": {
     "security": {

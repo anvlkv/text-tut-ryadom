@@ -39,6 +39,14 @@
               };
         console.log(saveTask);
         await invoke("write_task", { task: saveTask });
+
+        ctx.update((c) => {
+            const i = c.entries!.findIndex(
+                (e) => e.input.id === saveTask.input.id,
+            );
+            c.entries![i] = saveTask;
+            return c;
+        });
     }
 
     async function next() {
@@ -51,7 +59,7 @@
                 (e) => e.input.id === $ctx.current_entry,
             );
             const nextTask = $ctx.entries![taskIndex + 1];
-            if (nextTask) {
+            if (nextTask && nextTask.output?.completed_ts !== null) {
                 await goto(`/${nextTask.input.id}/highlight`);
             } else if ($ctx.entries!.some((e) => !e.output?.completed_ts)) {
                 const firstIncomplete = $ctx.entries!.find(

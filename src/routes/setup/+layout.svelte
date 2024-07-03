@@ -28,12 +28,11 @@
         preferHighContrast.set(ev.matches);
     }
 
-    function applySetup(e: Event) {
+    async function applySetup(e: Event) {
         e.preventDefault();
-        storeAppData().then(() => {
-            console.log("settings done");
-            window.location.href = "/";
-        });
+        await storeAppData();
+        console.info("setup done");
+        window.location.href = "/";
     }
 
     async function continueSetup(e: Event) {
@@ -43,7 +42,7 @@
         } else if ($page.route.id === "/setup/font") {
             await goto("/setup/color");
         } else {
-            applySetup(e);
+            await applySetup(e);
         }
     }
 
@@ -181,23 +180,16 @@
         Сбросить
     </Button>
 
-    {#if $page.route.id !== "/setup/color"}
-        <Button
-            on:click={continueSetup}
-            cta={true}
-            type="submit"
-            form="preferences"
-        >
+    <Button
+        on:click={continueSetup}
+        cta={true}
+        type="submit"
+        form="preferences"
+    >
+        {#if $page.route.id !== "/setup/color"}
             Далеее
-        </Button>
-    {:else}
-        <Button
-            on:click={applySetup}
-            cta={true}
-            type="submit"
-            form="preferences"
-        >
+        {:else}
             Готово
-        </Button>
-    {/if}
+        {/if}
+    </Button>
 </footer>

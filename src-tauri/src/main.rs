@@ -29,6 +29,12 @@ fn main() {
         <task::Task as ts_rs::TS>::export_all_to("../src/lib/types/").expect("write ts types");
     }
 
+    if let Some(mut p) = dirs::config_dir() {
+        p.push("com.anton.text-tut-ryadom");
+        p.push("config");
+        std::fs::create_dir_all(p).expect("create app dir");
+    }
+
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())

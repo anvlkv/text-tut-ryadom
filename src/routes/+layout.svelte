@@ -9,6 +9,7 @@
     import { open } from "@tauri-apps/plugin-dialog";
     import {
         BaseDirectory,
+        mkdir,
         create,
         exists,
         readTextFile,
@@ -19,7 +20,7 @@
     import "../app.css";
 
     export const WINDOW_SIZE = 100;
-    const APP_DATA_FILE = "config/app_data.json";
+    const APP_CONFIG_FILE = "config/app_data.json";
 
     const data = setContext("appData", writable({} as AppData));
     setContext("storeAppData", storeAppData);
@@ -36,19 +37,19 @@
 
         try {
             if (
-                !(await exists(APP_DATA_FILE, {
-                    baseDir: BaseDirectory.AppData,
+                !(await exists(APP_CONFIG_FILE, {
+                    baseDir: BaseDirectory.AppConfig,
                 }))
             ) {
-                await create(APP_DATA_FILE, {
-                    baseDir: BaseDirectory.AppData,
+                await create(APP_CONFIG_FILE, {
+                    baseDir: BaseDirectory.AppConfig,
                 });
             }
 
             await writeTextFile(
-                APP_DATA_FILE,
+                APP_CONFIG_FILE,
                 JSON.stringify({ src_dir, current_entry, preferences }),
-                { baseDir: BaseDirectory.AppData },
+                { baseDir: BaseDirectory.AppConfig },
             );
 
             console.info("app data stored");
@@ -125,8 +126,8 @@
         console.info("loading");
         try {
             const { src_dir, current_entry, preferences } = JSON.parse(
-                await readTextFile(APP_DATA_FILE, {
-                    baseDir: BaseDirectory.AppData,
+                await readTextFile(APP_CONFIG_FILE, {
+                    baseDir: BaseDirectory.AppConfig,
                 }),
             );
             $data.current_entry = current_entry;
@@ -138,9 +139,8 @@
             $data.current_entry = undefined;
             $data.total_entries = undefined;
             $data.entries_window = undefined;
+            console.info("no config");
         }
-
-        await prerequisites();
     }
 
     function sysDark(dark: boolean, contrast: boolean) {
@@ -204,9 +204,16 @@
         });
 
         load()
-            .then(() => invoke("close_splashscreen"))
             .then(() => {
-                console.info("app loaded");
+                console.info("app data loaded");
+                return prerequisites();
+            })
+            .then(() => {
+                console.info("app prerequisites complete");
+                return invoke("close_splashscreen");
+            })
+            .then(() => {
+                console.info("app ready");
             });
 
         return () => {

@@ -30,11 +30,12 @@ pub fn read_csv_file_tasks(path: &str) -> Result<Vec<Task>, String> {
     let highlights_path = path.replace(INPUT_ENDS_CSV, HIGHLIGHT_ENDS_CSV);
 
     if !std::path::Path::new(output_path.as_str()).exists() {
-        fs::write(output_path.as_str(), "").map_err(|e| e.to_string())?;
+        fs::write(output_path.as_str(), "text_id,text,completed_ts").map_err(|e| e.to_string())?;
     }
 
     if !std::path::Path::new(highlights_path.as_str()).exists() {
-        fs::write(highlights_path.as_str(), "").map_err(|e| e.to_string())?;
+        fs::write(highlights_path.as_str(), "text_id,group_id,start,end,color")
+            .map_err(|e| e.to_string())?;
     }
 
     let file_inputs = read_csv_inputs(path)?;
@@ -66,11 +67,12 @@ pub fn read_json_file_tasks(path: &str) -> Result<Vec<Task>, String> {
     let highlights_path = path.replace(INPUT_ENDS_JSON, HIGHLIGHT_ENDS_CSV);
 
     if !std::path::Path::new(output_path.as_str()).exists() {
-        fs::write(output_path.as_str(), "").map_err(|e| e.to_string())?;
+        fs::write(output_path.as_str(), "text_id,text,completed_ts").map_err(|e| e.to_string())?;
     }
 
     if !std::path::Path::new(highlights_path.as_str()).exists() {
-        fs::write(highlights_path.as_str(), "").map_err(|e| e.to_string())?;
+        fs::write(highlights_path.as_str(), "text_id,group_id,start,end,color")
+            .map_err(|e| e.to_string())?;
     }
 
     let file_inputs = read_json_inputs(path)?;
@@ -103,7 +105,7 @@ pub fn write_task(task: Task) -> Result<(), String> {
     let (highlights_path, output_path) = if is_json_origin {
         (
             task.origin.replace(INPUT_ENDS_JSON, HIGHLIGHT_ENDS_CSV),
-            task.origin.replace(INPUT_ENDS_CSV, OUTPUT_ENDS_CSV),
+            task.origin.replace(INPUT_ENDS_JSON, OUTPUT_ENDS_CSV),
         )
     } else {
         (
@@ -118,9 +120,7 @@ pub fn write_task(task: Task) -> Result<(), String> {
         write_csv_output(&output_path, output)?;
     }
 
-    if is_json_origin {
-        
-    }
+    if is_json_origin {}
 
     Ok(())
 }
