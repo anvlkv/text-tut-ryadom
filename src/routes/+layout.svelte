@@ -111,7 +111,7 @@
     async function prerequisites() {
         console.log($data);
         if (!$data.preferences) {
-            await goto("/setup");
+            await goto("/setup/tone");
         } else if (!$data.src_dir) {
             await goto("/directory");
         } else if (!$data.entries) {

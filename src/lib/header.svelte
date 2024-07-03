@@ -97,18 +97,24 @@
         hidden
     >
         <ul
-            class="bg-gray-50 dark:bg-gray-900 dc:bg-stone-950 lc:bg-stone-50 yellow:bg-yellow-50 green:bg-green-50 warm:bg-red-50 cold:bg-blue-50 earth:bg-earth-50 border-gray-400/50 dc:border-white lc:border-black shadow-lg rounded"
+            class="bg-gray-50 dark:bg-gray-900 dc:bg-stone-950 lc:bg-stone-50 yellow:bg-yellow-50 green:bg-green-50 warm:bg-red-50 cold:bg-blue-50 earth:bg-earth-50 border-gray-400/50 dc:border-white lc:border-black shadow-lg rounded overflow-hidden"
         >
             <li
                 class="border-b border-gray-400/50 dc:border-white lc:border-black"
             >
-                <a class="p-4 w-full flex flex-col" href="/directory">
+                <a
+                    class="p-4 w-full flex flex-col hover:text-gray-50 hover:dc:text-black hover:dark:text-gray-950 hover:bg-violet-600 hover:dark:bg-violet-300 hover:dc:bg-violet-50 hover:lc:bg-violet-900 hover:dull:bg-slate-900 hover:earth:bg-emerald-800 hover:warm:bg-amber-600 hover:cold:bg-blue-600 hover:yellow:bg-orange-600 hover:green:bg-lime-600"
+                    href="/directory"
+                >
                     <span> Выбор проекта </span>
                     <small class="text-xs text-thin">{dir}</small>
                 </a>
             </li>
             <li>
-                <a class="p-4 w-full block" href="/setup">Настройки</a>
+                <a
+                    class="p-4 w-full block hover:text-gray-50 hover:dc:text-black hover:dark:text-gray-950 hover:bg-violet-600 hover:dark:bg-violet-300 hover:dc:bg-violet-50 hover:lc:bg-violet-900 hover:dull:bg-slate-900 hover:earth:bg-emerald-800 hover:warm:bg-amber-600 hover:cold:bg-blue-600 hover:yellow:bg-orange-600 hover:green:bg-lime-600"
+                    href="/setup/tone">Настройки</a
+                >
             </li>
         </ul>
     </div>
