@@ -36,6 +36,7 @@ fn main() {
     }
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
@@ -47,6 +48,7 @@ fn main() {
             output::read_csv_outputs,
             output::write_csv_output,
             task::read_dir_tasks,
+            task::save_dir_tasks,
             task::read_csv_file_tasks,
             task::write_task,
             close_splashscreen

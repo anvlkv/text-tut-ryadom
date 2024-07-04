@@ -1,14 +1,14 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import { getContext, onMount } from "svelte";
-    import InfiniteLoading from "svelte-infinite-loading";
-    import VirtualList from "svelte-tiny-virtual-list";
+    // import InfiniteLoading from "svelte-infinite-loading";
+    // import VirtualList from "svelte-tiny-virtual-list";
     import type { Writable } from "svelte/store";
     import Task from "./task.svelte";
     import type { AppData } from "./types/AppData";
 
     const ctx: Writable<AppData> = getContext("appData");
-    const taskHeight = 5.75;
+    // const taskHeight = 5.75;
 
     let asideElement: HTMLElement;
     let asideHeight = 200;
@@ -17,20 +17,29 @@
     });
 
     let allowScrollTo = false;
-    $: taskIndex = allowScrollTo
-        ? $ctx.entries?.findIndex((e) => e.input.id === $page.params["task"])
-        : undefined;
+    // $: taskIndex = allowScrollTo
+    //     ? $ctx.entries?.findIndex((e) => e.input.id === $page.params["task"])
+    //     : undefined;
 
-    function infiniteHandler({
-        detail: { complete, error },
-    }: CustomEvent<{ complete: () => void; error: () => void }>) {}
+    // function infiniteHandler({
+    //     detail: { complete, error },
+    // }: CustomEvent<{ complete: () => void; error: () => void }>) {}
 
-    function onItemsUpdated() {
-        allowScrollTo = true;
-    }
+    // function onItemsUpdated() {
+    //     allowScrollTo = true;
+    // }
 
     onMount(() => {
         resize.observe(asideElement);
+        console.log(`#task-${$page.params["task"]}`, asideElement);
+        asideElement
+            .querySelector(`#task-${$page.params["task"]}`)
+            ?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "center",
+            });
+
         return () => {
             resize.disconnect();
         };
@@ -41,17 +50,17 @@
     bind:this={asideElement}
     class="basis-1/5 shrink-0 grow-0 text-sm border-r border-solid border-gray-400/50 dc:border-white lc:border-black overflow-x-hidden h-full"
 >
-    <!-- <ul>
-    {#each ($ctx.entries || []) as entry}
-      <li>
-          <Task
-          task={entry}
-          isCurrent={$ctx.current_entry === entry.input.id}
-        />
-      </li>
-    {/each}
-  </ul> -->
-    <VirtualList
+    <ul>
+        {#each $ctx.entries || [] as entry}
+            <li id={`task-${entry.input.id}`}>
+                <Task
+                    task={entry}
+                    isCurrent={$ctx.current_entry === entry.input.id}
+                />
+            </li>
+        {/each}
+    </ul>
+    <!-- <VirtualList
         height={asideHeight}
         itemCount={$ctx.total_entries || 0}
         itemSize={taskHeight * ($ctx.preferences?.fontSize || 16)}
@@ -68,8 +77,5 @@
                     ($ctx.entries || [])[index].input.id}
             />
         </div>
-        <!-- <div slot="footer">
-            <InfiniteLoading on:infinite={infiniteHandler} />
-        </div> -->
-    </VirtualList>
+    </VirtualList> -->
 </aside>

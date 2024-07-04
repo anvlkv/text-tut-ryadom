@@ -25,7 +25,7 @@
 </script>
 
 <div
-    class="contents"
+    class="contents select-none"
     style="--background-color: {colorValue}; --text-color: {textColorValue}"
 >
     {#if onClick}

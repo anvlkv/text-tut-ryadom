@@ -7,6 +7,7 @@
     import { getContext } from "svelte";
     import type { Writable } from "svelte/store";
     import Button from "./button.svelte";
+    import { labelStudioPost } from "./labelStudio";
 
     const ctx: Writable<AppData> = getContext("appData");
     const POSTPONE_DURATION = 5 * 60 * 1000;
@@ -37,7 +38,9 @@
                       completed_ts: completed.toISOString(),
                   },
               };
-        console.log(saveTask);
+        console.log(saveTask, $ctx.label_studio_src);
+
+        // TODO: post to label studio
         await invoke("write_task", { task: saveTask });
 
         ctx.update((c) => {

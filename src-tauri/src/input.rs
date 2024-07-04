@@ -26,27 +26,38 @@ pub fn read_csv_inputs(file: &str) -> Result<Vec<InputRecord>, String> {
 }
 
 #[tauri::command]
+pub fn write_csv_inputs(file: &str, inputs: Vec<InputRecord>) -> Result<(), String> {
+    let mut writer = csv::Writer::from_path(file).map_err(|e| e.to_string())?;
+
+    for record in inputs {
+        writer.serialize(record).map_err(|e| e.to_string())?;
+    }
+
+    writer.flush().map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
+#[tauri::command]
 pub fn read_json_inputs(file: &str) -> Result<Vec<InputRecord>, String> {
     let source = fs::read_to_string(file).map_err(|e| e.to_string())?;
 
     let data = jzon::parse(source.as_str()).map_err(|e| e.to_string())?;
 
     let mut entries: Vec<InputRecord> = Vec::new();
-    
+
     // handle label studio format
     if let Some(data) = data.as_array() {
         entries.extend(data.iter().map(|entry| {
             let id = entry["id"].to_string();
             let text = if let Some(text) = entry["data"]["text"].as_str() {
                 text.to_string()
-            }
-            else {
+            } else {
                 format!("unsupported: {:?}", entry["data"])
             };
             InputRecord { id, text }
         }));
-    }
-    else {
+    } else {
         panic!("format not supported");
     }
 

@@ -126,7 +126,7 @@
 </script>
 
 <p
-    class="{__class} highlight-area leading-loose mx-auto max-w-prose h-max p-8"
+    class="{__class} highlight-area select-text leading-loose mx-auto max-w-prose h-max p-8"
     bind:this={container}
     on:pointerdown={onPointerDown}
 >
