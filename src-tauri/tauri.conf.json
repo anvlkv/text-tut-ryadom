@@ -34,7 +34,7 @@
   "plugins": {},
   "app": {
     "security": {
-      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost ipc: http://ipc.localhost"
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost ipc: http://ipc.localhost http://* https://*"
     },
     "windows": [
       {
