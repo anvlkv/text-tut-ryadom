@@ -40,6 +40,7 @@
               };
         console.log(saveTask, $ctx.label_studio_src);
 
+        // TODO: post to label studio
         await invoke("write_task", { task: saveTask });
 
         ctx.update((c) => {
