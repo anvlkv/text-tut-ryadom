@@ -48,6 +48,7 @@ fn main() {
             output::read_csv_outputs,
             output::write_csv_output,
             task::read_dir_tasks,
+            task::save_dir_tasks,
             task::read_csv_file_tasks,
             task::write_task,
             close_splashscreen

@@ -6,7 +6,7 @@
     import type { Task } from "$lib/types/Task";
     import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
     import { invoke } from "@tauri-apps/api/core";
-    import { open } from "@tauri-apps/plugin-dialog";
+    import { open, save } from "@tauri-apps/plugin-dialog";
     import {
         BaseDirectory,
         mkdir,
@@ -187,11 +187,33 @@
         } else if (!$data.entries) {
             if ($data.src_dir) {
                 await loadDir();
-            } else {
+            } else if ($data.label_studio_src) {
                 await loadLabelStudio();
+                // FIXME: the app is ready to post annotations to LS, but the `result` format must match the format expected by the original editor.
+                await importSaveDir();
+            } else {
+                await goto("/directory");
             }
         } else {
             await openProjectPage();
+        }
+    }
+
+    async function importSaveDir() {
+        const savePath = await save({
+            canCreateDirectories: true,
+            title: "Где сохранить проект?",
+        });
+
+        if (savePath && $data.entries) {
+            await mkdir(savePath);
+            await invoke("save_dir_tasks", {
+                dir: savePath,
+                tasks: $data.entries,
+            });
+            $data.src_dir = savePath;
+            $data.label_studio_src = undefined;
+            await loadDir();
         }
     }
 

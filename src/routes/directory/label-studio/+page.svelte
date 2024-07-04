@@ -9,8 +9,8 @@
     import Input from "$lib/input.svelte";
 
     const ctx: Writable<AppData> = getContext("appData");
-    const loadLabelStudio: () => Promise<any | undefined> =
-        getContext("loadLabelStudio");
+    const prerequisites: () => Promise<any | undefined> =
+        getContext("prerequisites");
 
     let url: string | undefined = undefined;
     let token: string | undefined = undefined;
@@ -84,7 +84,7 @@
 
         creatingView = false;
 
-        await loadLabelStudio();
+        await prerequisites();
     }
 
     const onChangeUrl = ({ detail: val }: CustomEvent<string>) => {
@@ -111,9 +111,10 @@
     <h2 class="text-lg mb-4">
         <String>
             <svelte:fragment slot="familiar">
-                Добавь URL и Access Token из настроек аккаунта Label Studio
+                Для импорта добавь URL и Access Token из настроек аккаунта Label
+                Studio
             </svelte:fragment>
-            <svelte:fragment>Подключение Label Studio</svelte:fragment>
+            <svelte:fragment>Импорт задач из Label Studio</svelte:fragment>
         </String>
     </h2>
 
@@ -201,7 +202,7 @@
                     disabled={!project || !queueEnd || !queueStart}
                     on:click={onConnectLabelStudio}
                 >
-                    Готово
+                    Импортировать
                 </Button>
             </div>
         </form>

@@ -49,11 +49,11 @@
         <p class="max-w-prose mx-auto my-6">
             <String>
                 <svelte:fragment slot="familiar">
-                    Подключись к Label Studio
+                    Импортируй задачи из Label Studio
                 </svelte:fragment>
-                <svelte:fragment>Подключитесь к Label Studio</svelte:fragment>
+                <svelte:fragment>Импорт из Label Studio</svelte:fragment>
             </String>
         </p>
-        <Button href="/directory/label-studio" type="button">Подключить</Button>
+        <Button href="/directory/label-studio" type="button">Начать</Button>
     {/if}
 </section>

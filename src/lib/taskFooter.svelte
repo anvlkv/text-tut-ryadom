@@ -39,30 +39,8 @@
                   },
               };
         console.log(saveTask, $ctx.label_studio_src);
-        if ($ctx.label_studio_src) {
-            if (saveTask.output?.text) {
-                await labelStudioPost(
-                    `tasks/${saveTask.input.id}/annotations`,
-                    JSON.stringify({
-                        result: [
-                            {
-                                type: "textarea",
-                                origin: "manual",
-                                id: "na",
-                                value: {
-                                    text: [saveTask.output!.text],
-                                },
-                            },
-                        ],
-                    }),
-                    $ctx.label_studio_src,
-                );
-            } else {
-                console.log("highlights...");
-            }
-        } else if ($ctx.src_dir) {
-            await invoke("write_task", { task: saveTask });
-        }
+
+        await invoke("write_task", { task: saveTask });
 
         ctx.update((c) => {
             const i = c.entries!.findIndex(

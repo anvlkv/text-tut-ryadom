@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, path::PathBuf, str::FromStr};
 
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
@@ -8,7 +8,10 @@ use crate::{
         read_csv_highlights, read_json_highlights, write_csv_highlights, HighlightRecord,
         HIGHLIGHT_ENDS_CSV, HIGHLIGHT_ENDS_JSON,
     },
-    input::{read_csv_inputs, read_json_inputs, InputRecord, INPUT_ENDS_CSV, INPUT_ENDS_JSON},
+    input::{
+        read_csv_inputs, read_json_inputs, write_csv_inputs, InputRecord, INPUT_ENDS_CSV,
+        INPUT_ENDS_JSON,
+    },
     output::{
         read_csv_outputs, read_json_outputs, write_csv_output, OutputRecord, OUTPUT_ENDS_CSV,
         OUTPUT_ENDS_JSON,
@@ -147,4 +150,31 @@ pub fn read_dir_tasks(dir: &str) -> Result<Vec<Task>, String> {
     }
 
     Ok(tasks)
+}
+
+#[tauri::command]
+pub fn save_dir_tasks(dir: &str, tasks: Vec<Task>) -> Result<(), String> {
+    let base = PathBuf::from_str(dir).map_err(|e| e.to_string())?;
+
+    let mut inputs_path = base.clone();
+    inputs_path.push(format!("import{INPUT_ENDS_CSV}"));
+
+    let mut output_path = base.clone();
+    output_path.push(format!("import{OUTPUT_ENDS_CSV}"));
+
+    let mut highlights_path = base.clone();
+    highlights_path.push(format!("import{HIGHLIGHT_ENDS_CSV}"));
+
+    fs::write(inputs_path.clone(), "id,text").map_err(|e| e.to_string())?;
+
+    fs::write(output_path, "text_id,text,completed_ts").map_err(|e| e.to_string())?;
+
+    fs::write(highlights_path, "text_id,group_id,start,end,color").map_err(|e| e.to_string())?;
+
+    write_csv_inputs(
+        inputs_path.to_str().unwrap(),
+        tasks.into_iter().map(|t| t.input).collect(),
+    )?;
+
+    Ok(())
 }

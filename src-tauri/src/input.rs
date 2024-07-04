@@ -26,6 +26,19 @@ pub fn read_csv_inputs(file: &str) -> Result<Vec<InputRecord>, String> {
 }
 
 #[tauri::command]
+pub fn write_csv_inputs(file: &str, inputs: Vec<InputRecord>) -> Result<(), String> {
+    let mut writer = csv::Writer::from_path(file).map_err(|e| e.to_string())?;
+
+    for record in inputs {
+        writer.serialize(record).map_err(|e| e.to_string())?;
+    }
+
+    writer.flush().map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
+#[tauri::command]
 pub fn read_json_inputs(file: &str) -> Result<Vec<InputRecord>, String> {
     let source = fs::read_to_string(file).map_err(|e| e.to_string())?;
 

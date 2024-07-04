@@ -29,7 +29,7 @@
     "licenseFile": "../LICENSE.rtf"
   },
   "productName": "Текст тут рядом",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "identifier": "com.anton.text-tut-ryadom",
   "plugins": {},
   "app": {

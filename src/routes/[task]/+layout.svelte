@@ -49,17 +49,17 @@
 </script>
 
 <div class="flex grow items-stretch justify-stretch w-full overflow-hidden">
-    {#if $ctx.loading}
-        <h2 class="m-8 w-full text-center">Загрузка...</h2>
-    {:else}
-        <TaskList />
-        <section
-            bind:this={sectionElement}
-            on:scroll={onScroll}
-            class="h-full w-full flex flex-col pt-4 overflow-y-auto overflow-x-visible"
-        >
+    <TaskList />
+    <section
+        bind:this={sectionElement}
+        on:scroll={onScroll}
+        class="h-full w-full flex flex-col pt-4 overflow-y-auto overflow-x-visible"
+    >
+        {#if $ctx.loading}
+            <h2 class="m-8 w-full text-center">Загрузка...</h2>
+        {:else}
             <slot />
             <TaskFooter />
-        </section>
-    {/if}
+        {/if}
+    </section>
 </div>
