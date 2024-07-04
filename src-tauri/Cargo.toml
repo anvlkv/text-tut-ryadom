@@ -22,6 +22,7 @@ tauri-plugin-fs = "2.0.0-beta"
 tauri-plugin-dialog = "2.0.0-beta"
 jzon = "0.12.5"
 dirs = "5.0.1"
+tauri-plugin-http = "2.0.0-beta.11"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

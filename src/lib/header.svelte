@@ -18,7 +18,7 @@
     let pos = [0, 0];
     let menuButton: HTMLButtonElement;
 
-    $: dir = $ctx.src_dir;
+    $: dir = $ctx.src_dir || $ctx.label_studio_src?.label_studio_url;
 
     function showMenu(e: MouseEvent) {
         e.stopPropagation();

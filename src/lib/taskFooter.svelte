@@ -7,6 +7,7 @@
     import { getContext } from "svelte";
     import type { Writable } from "svelte/store";
     import Button from "./button.svelte";
+    import { labelStudioPost } from "./labelStudio";
 
     const ctx: Writable<AppData> = getContext("appData");
     const POSTPONE_DURATION = 5 * 60 * 1000;
@@ -37,8 +38,31 @@
                       completed_ts: completed.toISOString(),
                   },
               };
-        console.log(saveTask);
-        await invoke("write_task", { task: saveTask });
+        console.log(saveTask, $ctx.label_studio_src);
+        if ($ctx.label_studio_src) {
+            if (saveTask.output?.text) {
+                await labelStudioPost(
+                    `tasks/${saveTask.input.id}/annotations`,
+                    JSON.stringify({
+                        result: [
+                            {
+                                type: "textarea",
+                                origin: "manual",
+                                id: "na",
+                                value: {
+                                    text: [saveTask.output!.text],
+                                },
+                            },
+                        ],
+                    }),
+                    $ctx.label_studio_src,
+                );
+            } else {
+                console.log("highlights...");
+            }
+        } else if ($ctx.src_dir) {
+            await invoke("write_task", { task: saveTask });
+        }
 
         ctx.update((c) => {
             const i = c.entries!.findIndex(

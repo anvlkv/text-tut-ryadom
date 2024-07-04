@@ -63,10 +63,10 @@
     });
 </script>
 
-<div class="{__class} max-h-full">
+<div class="{__class} max-h-full w-72">
     <ul
         bind:this={listElement}
-        class="mt-auto w-72 flex flex-col justify-center items-stretch px-6 border-l border-solid border-gray-400/50 dc:border-white lc:border-black"
+        class="mt-auto fixed max-w-72 flex flex-col justify-center items-stretch px-6 border-l border-solid border-gray-400/50 dc:border-white lc:border-black"
     >
         {#if groups.length > 0}
             <li class="mt-auto"></li>

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import Header from "$lib/header.svelte";
-    import type { AppData } from "$lib/types/AppData";
+    import type { AppData, LabelStudioSource } from "$lib/types/AppData";
     import { ColorSchema } from "$lib/types/Preferences";
     import type { Task } from "$lib/types/Task";
     import { BASE_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "$lib/values";
@@ -18,13 +18,14 @@
     import { onMount, setContext } from "svelte";
     import { writable } from "svelte/store";
     import "../app.css";
+    import { labelStudioGet } from "$lib/labelStudio";
 
-    export const WINDOW_SIZE = 100;
     const APP_CONFIG_FILE = "config/app_data.json";
 
     const data = setContext("appData", writable({} as AppData));
-    setContext("storeAppData", storeAppData);
+    setContext("storeAppData", storeAppConfig);
     setContext("loadDir", loadDir);
+    setContext("loadLabelStudio", loadLabelStudio);
     setContext("prerequisites", prerequisites);
 
     let theme = ColorSchema.Dull;
@@ -32,8 +33,8 @@
 
     $: $data.activeSchema = theme;
 
-    async function storeAppData() {
-        const { src_dir, current_entry, preferences } = $data;
+    async function storeAppConfig() {
+        const { src_dir, current_entry, preferences, label_studio_src } = $data;
 
         try {
             if (
@@ -48,7 +49,12 @@
 
             await writeTextFile(
                 APP_CONFIG_FILE,
-                JSON.stringify({ src_dir, current_entry, preferences }),
+                JSON.stringify({
+                    src_dir,
+                    current_entry,
+                    preferences,
+                    label_studio_src,
+                }),
                 { baseDir: BaseDirectory.AppConfig },
             );
 
@@ -56,6 +62,71 @@
         } catch (e) {
             console.error("failed to store app data", e);
         }
+    }
+
+    async function loadLabelStudio() {
+        data.update((d) => {
+            d.loading = true;
+            return d;
+        });
+        try {
+            const config = $data.label_studio_src! as LabelStudioSource;
+
+            const tasks_data = await labelStudioGet<{
+                tasks: {
+                    id: number;
+                    data: {
+                        text: string | string[];
+                    };
+                    annotations_results: string;
+                    completed_at: any;
+                }[];
+            }>(
+                `tasks?page_size=${config.page_size}&view=${config.view}&project=${config.project}`,
+                config,
+            );
+            console.log(tasks_data);
+            const tasks: Task[] = tasks_data.tasks.map((d) => ({
+                input: {
+                    id: d.id.toString(),
+                    text: Array.isArray(d.data.text)
+                        ? d.data.text.join("\n")
+                        : d.data.text,
+                },
+                output: d.annotations_results
+                    ? (() => {
+                          const {
+                              value: { text },
+                          } = JSON.parse(d.annotations_results);
+                          return {
+                              text: text[0] as string,
+                              text_id: d.id.toString(),
+                              completed_ts: d.completed_at,
+                          };
+                      })()
+                    : null,
+                highlights: [],
+                origin: config.label_studio_url,
+                postponed: null,
+            }));
+
+            $data.entries = tasks;
+            $data.total_entries = tasks.length;
+
+            const entryIndex = $data.current_entry
+                ? $data.entries.findIndex(
+                      (e) => e.input.id === $data.current_entry,
+                  )
+                : $data.entries.findIndex((e) => !e.output);
+            $data.current_entry = $data.entries[entryIndex]!.input.id;
+
+            await openProjectPage();
+        } catch (e) {
+            console.error(e);
+            $data.label_studio_src = undefined;
+            await goto("/directory");
+        }
+        $data.loading = false;
     }
 
     async function loadDir() {
@@ -88,8 +159,6 @@
                   )
                 : $data.entries.findIndex((e) => !e.output);
             $data.current_entry = $data.entries[entryIndex]?.input.id;
-            const windowStart = Math.max(entryIndex - WINDOW_SIZE / 2, 0);
-            $data.entries_window = [windowStart, windowStart + WINDOW_SIZE];
 
             await openProjectPage();
         } catch {
@@ -113,32 +182,37 @@
         console.log($data);
         if (!$data.preferences) {
             await goto("/setup/tone");
-        } else if (!$data.src_dir) {
+        } else if (!$data.src_dir && !$data.label_studio_src) {
             await goto("/directory");
         } else if (!$data.entries) {
-            await loadDir();
+            if ($data.src_dir) {
+                await loadDir();
+            } else {
+                await loadLabelStudio();
+            }
         } else {
             await openProjectPage();
         }
     }
 
-    async function load() {
+    async function loadAppConfig() {
         console.info("loading");
         try {
-            const { src_dir, current_entry, preferences } = JSON.parse(
-                await readTextFile(APP_CONFIG_FILE, {
-                    baseDir: BaseDirectory.AppConfig,
-                }),
-            );
+            const { src_dir, current_entry, preferences, label_studio_src } =
+                JSON.parse(
+                    await readTextFile(APP_CONFIG_FILE, {
+                        baseDir: BaseDirectory.AppConfig,
+                    }),
+                );
             $data.current_entry = current_entry;
             $data.src_dir = src_dir;
+            $data.label_studio_src = label_studio_src;
             $data.preferences = preferences;
             console.info("loaded from config");
         } catch {
             $data.src_dir = undefined;
             $data.current_entry = undefined;
             $data.total_entries = undefined;
-            $data.entries_window = undefined;
             console.info("no config");
         }
     }
@@ -203,7 +277,7 @@
             }
         });
 
-        load()
+        loadAppConfig()
             .then(() => {
                 console.info("app data loaded");
                 return prerequisites();

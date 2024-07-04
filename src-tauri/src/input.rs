@@ -32,21 +32,19 @@ pub fn read_json_inputs(file: &str) -> Result<Vec<InputRecord>, String> {
     let data = jzon::parse(source.as_str()).map_err(|e| e.to_string())?;
 
     let mut entries: Vec<InputRecord> = Vec::new();
-    
+
     // handle label studio format
     if let Some(data) = data.as_array() {
         entries.extend(data.iter().map(|entry| {
             let id = entry["id"].to_string();
             let text = if let Some(text) = entry["data"]["text"].as_str() {
                 text.to_string()
-            }
-            else {
+            } else {
                 format!("unsupported: {:?}", entry["data"])
             };
             InputRecord { id, text }
         }));
-    }
-    else {
+    } else {
         panic!("format not supported");
     }
 
