@@ -1,6 +1,6 @@
 [package]
 name = "text-tut-ryadom"
-version = "0.2.1"
+version = "0.2.2"
 description = "ASD friendly text analysis"
 authors = ["https://antontut.ru", "a.nvlkv <a.nvlkv@pm.me>"]
 edition = "2021"

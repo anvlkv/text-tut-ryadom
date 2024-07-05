@@ -29,12 +29,12 @@
     "licenseFile": "../LICENSE.rtf"
   },
   "productName": "Текст тут рядом",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "identifier": "com.anton.text-tut-ryadom",
   "plugins": {},
   "app": {
     "security": {
-      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost ipc: http://ipc.localhost http://* https://*"
+      "csp": "default-src 'self' *; connect-src ipc: http://ipc.localhost ipc: http://ipc.localhost *"
     },
     "windows": [
       {
